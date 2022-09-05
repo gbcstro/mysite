@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'cargoloading/result.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="back">
+    <i class="fa fa-arrow-left" onclick="history.back(-1)"></i>
+</div>
+
+<div class="wrapper">
+    <div class="title-text">
+        <h1>OPTIMAL SOLUTION</h1>
+    </div>
+    
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <th>Box No.</th>
+                <th>Description</th>
+                <th>Weight (kg)</th>
+                <th>Height (cm)</th>
+                <th>Length (cm)</th>
+                <th>Width (cm)</th>
+                <th>CBM (kg)</th>
+                <th>Chargeable weight</th>
+                <th>Cost / Profit</th>
+                <th class="os">Optimal Solution</th>
+              </thead>
+              <tbody>
+                {% for b, d, h, l, wd, we, cbm, chW, v in tl %}
+                    <tr>
+                        <td>{{b}}</td>
+                        <td>{{d}}</td>
+                        <td>{{we}}</td>
+                        <td>{{h}}</td>
+                        <td>{{l}}</td>
+                        <td>{{wd}}</td>
+                        <td>{{cbm}}</td>
+                        <td>{{chW}}</td>
+                        <td>{{v}}</td>
+                        {% if b in bl %}
+                            <td class="op">1</td>
+                        {% else %}
+                            <td class="nop">0</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+              </tbody>
+        </table>
+    </div>
+
+    <div class="text-wrap">
+        <h1>TOTAL COST</h1>
+        <h2>{{total_cost}}</h2>
+    </div>
+    
+    <div class="text-wrap">
+        <h1>SUMMARY</h1>
+    </div>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <th>Box No.</th>
+                <th>Weight</th>
+                <th>Cost/Profit</th>
+                <th>CBM</th>
+                <th>Optimal Solution</th>
+            </thead>
+            <tbody>
+                {% for bl, w, v, cbm in fl %}
+                    <tr>
+                        <td>{{bl}}</td>
+                        <td>{{w}}</td>
+                        <td>{{v}}</td>
+                        <td>{{cbm}}</td>
+                        <td>1</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="button-wrapper">
+        <button id="myBtn">SUBMIT ANOTHER <br> ENTRY</button>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-wrapper">
+            <p>You will be directed back to the Landing Page to submit another entry.</p>
+            
+            <div class="button-wrapper">
+                <div class="button-spacing">
+                  <button onclick="location.href = '{% url 'generate' %}';">Continue</button>
+                </div>
+                <div class="button-spacing">
+                  <button id="close">Decline</button>
+                </div>
+              </div>
+        </div>
+    </div>
+
+</div>
+    
+<script>
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var e = document.getElementById("close");
+
+// When the user clicks on the button, open the modal
+btn.onclick = function() {
+  modal.style.display = "block";
+}
+
+e.onclick = function() {
+  modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+</script>
+
+{% endblock content %}

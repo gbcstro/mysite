@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'cargoloading/generate.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="back">
+  <i class="fa fa-arrow-left" onclick="history.back(-1)"></i>
+</div>
+
+<div class="wrapper">
+
+  <div class="label-wrapper">
+    <div class="form-labels">
+      <label>No. of box: </label>
+      </br>
+      <p>{{box}}</p>
+    </div>
+    </br>
+
+    <div class="form-labels">
+      <label>Cargo Type: </label>
+      </br>
+      <p>{{type}}</p>
+    </div>
+    </br>
+
+    <div class="form-labels">
+      <label>Vehicle Capacity (kg): </label>
+      </br>
+      <p>{{capacity}}</p>
+    </div>
+    </br>
+
+    <div class="form-labels">
+      <label>Initial Rate: </label>
+      </br>
+      <p>{{rate}}</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="table-wrapper">
+  <form method="POST">
+    <div class="remind-text">
+      <p>Boxes with * symbol are required fields.</p>
+    </div>
+    {% csrf_token %}
+    <table>
+      <thead>
+        <th>Box No.</th>
+        <th>Description</th>
+        <th>Height (cm)</th>
+        <th>Length (cm)</th>
+        <th>Width (cm)</th>
+        <th>Weight (kg)</th>
+      </thead>
+      <tbody>
+        {{ formset.management_form }}
+        {% for form in formset%}
+          <tr>
+            <td class="num">{{forloop.counter}}</td>
+            <td>{{form.description}}</td>
+            <td class="req">{{form.height}}</td>
+            <td class="req">{{form.length}}</td>
+            <td class="req">{{form.width}}</td>
+            <td class="req">{{form.weight}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="error-message">
+      {% if formset.errors %}
+        <p>Fill the required empty boxes!</p>
+      {% endif %}
+    </div>
+
+    <div class="button-wrapper">
+      <div class="button-spacing">
+        <button type="submit">Submit</button>
+      </div>
+      <div class="button-spacing">
+        <button type="reset">Clear</button>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+
+{% endblock content %}

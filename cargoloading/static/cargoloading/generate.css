@@ -1,0 +1,275 @@
+@charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;1,100;1,200;1,300&display=swap');
+
+/* BASE.HTML CSS */
+
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.7px 20px;
+    text-decoration: none;
+    background-color: #176087;
+}
+
+.nav-title {
+    display: inline-flex;
+    padding: 10px 20px;
+    margin-left: 50px;
+    list-style: none;
+}
+
+.navigation-bar .nav-title li img{
+    padding-right: 20px;
+}
+
+.navigation-bar .nav-title li a{
+    text-decoration: none;
+    font-size: 35px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-links{
+    display: inline-flex;
+    margin-right: 50px;
+    list-style: none;
+}
+
+.navigation-bar .nav-links li {
+    padding: 5px 20px;
+}
+
+.navigation-bar .nav-links li a{
+    padding: 5px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 800;
+    color: white;
+}
+
+.navigation-bar .nav-links li a:hover{
+    padding: 5px 20px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 800;
+    background: white;
+    color: rgb(4, 103, 184);
+}
+
+/* ----------------- */
+
+/* GENERATE.HTML CSS */
+
+.wrapper{
+    margin-right: 15px;
+    margin-left: 15px;
+    margin-top: 75px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 15px;
+}
+
+.wrapper .label-wrapper{
+    display: flex;
+}
+
+.wrapper .label-wrapper .form-labels{
+    padding: 5px;
+    padding-left: 75px;
+    padding-right: 75px;
+    font-size: 18px;
+}
+
+.wrapper .label-wrapper .form-labels select{
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+    padding: 5px;
+}
+
+.wrapper .label-wrapper .form-labels input[type="number"] {
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+}
+
+.wrapper .label-wrapper .form-labels input[type="text"] {
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+}
+
+.wrapper .label-wrapper .form-labels input[type="number"]::placeholder {
+    font-size: 12px;
+    color: rgb(90, 88, 88);
+}
+
+.wrapper .label-wrapper .form-labels input[type="text"]::placeholder {
+    font-size: 12px;
+    color: rgb(90, 88, 88);
+}
+
+.wrapper .label-wrapper .form-labels input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.wrapper .button-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px 10px;
+    
+}
+
+.wrapper .button-wrapper .button-spacing{
+    padding-left: 75px;
+    padding-right: 75px;
+    
+}
+
+.wrapper .button-wrapper button{
+    background-color: #1D84B5;
+    color: #fff;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
+.wrapper .button-wrapper button:hover{
+    background-color: white;
+    color: #1D84B5;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 5px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
+/* ----------------- */
+
+
+/* TABLE.HTML CSS */
+
+.back{
+    float: left;
+    margin: 15px;
+    font-size: 34px;
+    color:#0A2239
+}
+ 
+.back i:hover{
+    color: #53A2BE;
+}
+
+.wrapper .label-wrapper .form-labels p{
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+}
+
+.remind-text{
+    color: red;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.table-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.table-wrapper table {
+    padding: 15px;
+}
+
+.table-wrapper table th{
+    padding: 15px;
+    background-color: #53A2BE;
+    color: white;
+    font-size: 15px;
+}
+
+.table-wrapper table .num{
+    font-size: 15px;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+}
+
+.table-wrapper table td input {
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #69a6c7;
+}
+
+.table-wrapper table .req input::placeholder {
+    font-weight: 900;
+    color: red;
+}
+
+.table-wrapper .error-message{
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 900;
+    color: red;
+}
+
+.button-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px 10px;
+}
+
+.button-wrapper .button-spacing{
+    padding-left: 75px;
+    padding-right: 75px;
+}
+
+.button-wrapper button{
+    background-color: #1D84B5;
+    color: #fff;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
+.button-wrapper button:hover{
+    background-color: white;
+    color: #1D84B5;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 5px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
+
+
+
+/* ----------------- */

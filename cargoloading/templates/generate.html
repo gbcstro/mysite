@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'cargoloading/generate.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="wrapper">
+  <form method="POST">
+    {% csrf_token %}
+    <div class="label-wrapper">
+      <div class="form-labels">
+        <label>No. of box: </label>
+        </br>
+        {{form.num_box}}
+      </div>
+      </br>
+
+      <div class="form-labels">
+        <label>Cargo Type: </label>
+        </br>
+        {{form.cargo_type}}
+      </div>
+      </br>
+
+      <div class="form-labels">
+        <label>Type of vehicle: </label>
+        </br>
+        {{form.capacity}}
+      </div>
+      </br>
+
+      <div class="form-labels">
+        <label>Initial Rate: </label>
+        </br>
+        {{form.ini_rate}}
+      </div>
+    </div>
+
+    
+
+    <div class="button-wrapper">
+      <div class="button-spacing">
+        <button type="submit">Submit</button>
+      </div>
+      <div class="button-spacing">
+        <button type="reset">Clear</button>
+      </div>
+    </div>
+ 
+  </form>
+</div>
+
+{% endblock content %}

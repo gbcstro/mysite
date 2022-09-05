@@ -1,0 +1,66 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cargo Loading</title>
+
+    <!--BASE CSS-->
+    <link rel="stylesheet" type="text/css" href="{% static 'cargoloading/style.css' %}">
+    
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;1,100;1,200;1,300&display=swap" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="bg">
+      <div class="navigation-bar">
+        <ul class="nav-title">
+          <li><img src="{% static 'cargoloading/images/icon.png' %}" alt="Logo" width="50" height="50"></li>
+          <li><a href="{% url 'index' %}">Cargo Loading</a></li>
+        </ul>
+      
+        <ul class="nav-links">
+          <li><a href="{% url 'index' %}">Home</a></li>
+          <li><a href="#information">Information</a></li>
+          <li><a href="#about">About Us</a></li>
+        </ul>
+      </div>
+
+      <div class="welcome-text">
+        <h1>Cargo Loading Optimizer</h1>
+        <p>The "Cargo Loading Optimizer" is a web application designed to determine the optimal set of boxes that should be loaded in a vehicle.</p>
+        <div class="get-started">
+            <h2><a href="{% url 'generate' %}">GET STARTED</a></h2>
+        </div>
+      </div>
+      
+      <div class="spacing"></div>
+
+
+      <div class="text-wrapper" id="information">
+        <div class="text-wrap">
+          <h1>Information</h1>
+          <p>The "Cargo Loading Optimizer" is a web application designed to determine the optimal set of boxes that should be loaded in a vehicle.
+             This web app is recommended for customers who wish to get the most out of their vehicle when loading boxes. 
+             Small e-commerce or courier services may not have a large fleet of vehicles to employ for delivery;
+            this web application may assist them in organizing their cargo deliveries and maximizing profits.</p>
+        </div>
+        
+        <div class="text-wrap" id="about">
+          <h1>About Us</h1>
+          <p>The developers of this web application were Computer Science students from Holy Angel University. This web application was a contingent part of their senior thesis.</p>
+        
+        </div>
+
+      </div>
+    </div>
+   
+  </body>
+
+</html>
