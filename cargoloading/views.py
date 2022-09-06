@@ -110,15 +110,16 @@ def table(request):
 
     return render(request, 'table.html', context)
 
-#Optimal List
+#List of not included items
+xboxList = []
+xwghtList = []
+xcbmList = []
+xvalList = []
+
+#Final Optimal List
 boxList = []
-dscList = []
-hghtList = []
-lenList = []
-wdthList = []
 wghtList = []
 cbmList = []
-chrge_wghtList = []
 valList = []
 
 def result(request):
@@ -134,6 +135,7 @@ def result(request):
     dynamic_Prog(weight, value, int(capacity), int(boxes), int(volume), cbm)
     print(boxList)
     table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
+    drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
     final_list = zip(boxList,wghtList,valList,cbmList)
     total_cost = sum(valList)
     total_cbm = sum(cbmList)
@@ -143,6 +145,7 @@ def result(request):
         'total_cost':total_cost,
         'bl':boxList,
         'tl':table_list,
+        'dl':drop_list,
         'fl':final_list,
     }
     return render(request, 'result.html', context)
@@ -150,6 +153,9 @@ def result(request):
 # Function for Dynamic Programming
 # dynamic_Prog(weight, value, vehicle_capacity, num_box, vehicle_volume, cbm)
 def dynamic_Prog(W, V, M, n, C, Z):
+
+    # NEW ARRAY PARA SA MGA ITEMS NA DI MAIINCLUDE SA OPTIMAL SOLUTION
+    not_included = np.array([[0, 0, 0, 0]])
 
     optimal_set = np.array([[0, 0, 0, 0]])
 
@@ -163,11 +169,13 @@ def dynamic_Prog(W, V, M, n, C, Z):
                     V[i-1] + bin_Table[i-1][j-W[i-1]], bin_Table[i-1][j])
             else:
                 bin_Table[i][j] = bin_Table[i-1][j]
+
     print("Max Profit: ", bin_Table[n][M])
     print("Maximum Capacity (Weight): ", M)
     print("Maximum Capacity (Volume): ", C)
     print("\nSelected Packs: ")
     print("Box No.\tWeight\tProfit/Value\tCBM")
+
     while (n != 0):
         if (bin_Table[n][M] != bin_Table[n-1][M]):
             print(n, "\t", W[n-1], "\t", V[n-1], "\t\t", Z[n-1])
@@ -175,35 +183,43 @@ def dynamic_Prog(W, V, M, n, C, Z):
             optimal_set = np.append(optimal_set, [row], axis=0)
 
             M = M - W[n-1]
+        else:  # ELSE STATEMENT PARA SA MGA BOX NA DI MASASAMA SA INITIAL OPTIMAL SOLUTION
+            row = np.array([n, W[n-1],  V[n-1], Z[n-1]])
+            not_included = np.append(not_included, [row], axis=0)
+
         n -= 1
 
     # DESCENDING ORDER FOR PROFIT/VALUE
-    optimal_set = optimal_set[optimal_set[:, 2].argsort()[::-1]]
+    # optimal_set = optimal_set[optimal_set[:, 2].argsort()[
+        #::-1]]  # TANGALIN 'TO
 
     print("\n\n******INITIAL OPTIMAL SOLUTION (Weight Constraint Only)******")
     print("Box No.\tWeight\tProfit/Value\tCBM")
-    optimal_set = np.delete(optimal_set, -1, axis=0)
+    # YUNG DITO GAWING 0 YUNG -1
+    optimal_set = np.delete(optimal_set, 0, axis=0)
     print(optimal_set)
 
-    print('\n***CBM SUM***')
     cbmSum = sum(optimal_set[:, -1])
-    print("{:.2f}".format(cbmSum))
+
+    print('\nTotal Number of Boxes: ' + str(len(optimal_set[:, 0])),
+          '\nTotal Weight: ' + str(sum(optimal_set[:, 1])),
+          '\nTotal Profit: ' + str(sum(optimal_set[:, 2])),
+          '\nTotal Volume: ' + str("{:.2f}".format(cbmSum)))
 
     # INITIAL optimal_set VALUES (weight constraint only)
     numOfBoxes_init = int(len(optimal_set[:, 0]))
-    numbox_list = optimal_set[:, 0] # BAGONG LIST
+    numbox_list = optimal_set[:, 0]  # BAGONG LIST
 
     weightList_init = optimal_set[:, 1]
 
-    profitList_init = optimal_set[:, 2]  
+    profitList_init = optimal_set[:, 2]
 
     a = optimal_set[:, 3]
     a1 = a.tolist()
-    volumeList_init = list(map(round, a1)) 
+    volumeList_init = list(map(round, a1))
 
     # BKP DP ALGO - APPLY TO INITIAL optimal_set VALUES
     Final_optimal_set = np.array([[0, 0, 0, 0]])
-
 
     volume_Table = [[0 for x in range(C + 1)]
                     for x in range(numOfBoxes_init + 1)]
@@ -214,6 +230,11 @@ def dynamic_Prog(W, V, M, n, C, Z):
             elif j >= volumeList_init[i-1]:
                 volume_Table[i][j] = max(
                     profitList_init[i-1] + volume_Table[i-1][j-volumeList_init[i-1]], volume_Table[i-1][j])
+
+                # The second conditional statement (elif) contains the code block for when
+                # the VOLUME of the i(th) box is less than the total VOLUME permissible for that cell (j).
+                # In this code block, the profit when the box is included versus the profit when the box is excluded are compared.
+                # Whichever of the values is the highest is the one assigned to that cell.
             else:
                 volume_Table[i][j] = volume_Table[i-1][j]
 
@@ -225,11 +246,17 @@ def dynamic_Prog(W, V, M, n, C, Z):
             Final_optimal_set = np.append(Final_optimal_set, [row], axis=0)
 
             C = C - volumeList_init[numOfBoxes_init-1]
+
+        else:  # ELSE STATEMENT PARA SA MGA BOX NA DI MASASAMA SA FINAL OPTIMAL SOLUTION
+            row = np.array([numbox_list[numOfBoxes_init-1],  weightList_init[numOfBoxes_init-1],
+                           profitList_init[numOfBoxes_init-1], volumeList_init[numOfBoxes_init-1]])
+            not_included = np.append(not_included, [row], axis=0)
+
         numOfBoxes_init -= 1
-        #BAGONG WAY PAG-KAAPPEND: numbox_list[numOfBoxes_init-1]
+        # BAGONG WAY PAG-KAAPPEND: numbox_list[numOfBoxes_init-1]
 
     # DESCENDING ORDER FOR PROFIT/VALUE
-    
+
     Final_optimal_set = Final_optimal_set[Final_optimal_set[:, 2].argsort()[
         ::-1]]
 
@@ -237,14 +264,10 @@ def dynamic_Prog(W, V, M, n, C, Z):
     print("Box No.\tWeight\tProfit/Value\tCBM")
     Final_optimal_set = np.delete(Final_optimal_set, -1, axis=0)
     print(Final_optimal_set)
+
     boxList.clear()
-    dscList.clear()
-    hghtList.clear()
-    lenList.clear()
-    wdthList.clear()
     wghtList.clear()
     cbmList.clear()
-    chrge_wghtList.clear()
     valList.clear()
 
     for i in Final_optimal_set:
@@ -252,6 +275,60 @@ def dynamic_Prog(W, V, M, n, C, Z):
         wghtList.append(i[1])
         valList.append(i[2])
         cbmList.append(i[3]) 
+
+    finalcbmSum = sum(Final_optimal_set[:, -1])
+
+    print('\nTotal Number of Boxes: ' + str(len(Final_optimal_set[:, 0])),
+          '\nTotal Weight: ' + str(sum(Final_optimal_set[:, 1])),
+          '\nTotal Profit: ' + str(sum(Final_optimal_set[:, 2])),
+          '\nTotal Volume: ' + str("{:.2f}".format(finalcbmSum)))
+
+    # DESCENDING ORDER FOR PROFIT/VALUE NG ITEMS NA DI MAIINCLUDE SA FINAL OPTIMAL SOLUTION
+    not_included = not_included[not_included[:, 2].argsort()[
+        ::-1]]
+    print("\n\n******ITEMS NOT INCLUDED IN THE OPTIMAL SOLUTION******")
+    print("Box No.\tWeight\tProfit/Value\tCBM")
+    not_included = np.delete(not_included, -1, axis=0)
+    print(not_included)
+
+    xboxList.clear()
+    xwghtList.clear()
+    xcbmList.clear()
+    xvalList.clear()
+
+    for i in not_included:
+        xboxList.append(i[0])
+        xwghtList.append(i[1])
+        xvalList.append(i[2])
+        xcbmList.append(i[3]) 
+
+    not_includedcbmSum = sum(not_included[:, -1])
+    notincluded_numBox = int(len(not_included[:, 0]))
+    NI_weightSum = sum(not_included[:, 1])
+
+    if notincluded_numBox == 0:
+        print('\nTotal Number of Boxes: 0',
+              '\nTotal Weight: ' + str(sum(not_included[:, 1])),
+              '\nTotal Profit: ' + str(sum(not_included[:, 2])),
+              '\nTotal Volume: ' + str("{:.2f}".format(not_includedcbmSum)))
+    else:
+        print('\nTotal Number of Boxes: ' + str(notincluded_numBox),
+              '\nTotal Weight: ' + str(sum(not_included[:, 1])),
+              '\nTotal Profit: ' + str(sum(not_included[:, 2])),
+              '\nTotal Volume: ' + str("{:.2f}".format(not_includedcbmSum)))
+
+    print("\nRECOMMENDATION:")
+    if NI_weightSum == 0 and not_includedcbmSum == 0:
+        print("No recommendations needed.")
+    elif (NI_weightSum <= 600 or NI_weightSum != 0) and (not_includedcbmSum <= 666 or not_includedcbmSum != 0):
+        print("The recommended vehicle to load the remaining box/es is a light van with a maximum capacity of 600 kg in terms of weight and a maximum capacity of 666 kg in terms of volume.")
+    elif (NI_weightSum > 600 or NI_weightSum <= 1000) and (not_includedcbmSum > 666 or not_includedcbmSum <= 999):
+        print("The recommended vehicle to load the remaining box/es is an L300 van with a maximum capacity of 1000 kg in terms of weight and a maximum capacity of 999 kg in terms of volume.")
+    elif (NI_weightSum > 1000 or NI_weightSum <= 2000) and (not_includedcbmSum > 999 or not_includedcbmSum <= 3330):
+        print("The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume.")
+    else:
+        print("It is better to use big trucks in loading the remaining items")
+    
 
     
     

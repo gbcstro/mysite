@@ -57,19 +57,23 @@
         <h1>TOTAL COST</h1>
         <h2>{{total_cost}}</h2>
     </div>
-    
-    <div class="text-wrap">
-        <h1>SUMMARY</h1>
-    </div>
 
     <div class="table-wrapper">
+        <div class="text-wrap">
+            <h1>----- SUMMARY -----</h1>
+        </div>
+
+        <div class="text-wrap">
+            <h2>OPTIMAL LIST</h2>
+        </div>
+
         <table>
             <thead>
                 <th>Box No.</th>
                 <th>Weight</th>
                 <th>Cost/Profit</th>
                 <th>CBM</th>
-                <th>Optimal Solution</th>
+                <th class="os">Optimal Solution</th>
             </thead>
             <tbody>
                 {% for bl, w, v, cbm in fl %}
@@ -78,7 +82,31 @@
                         <td>{{w}}</td>
                         <td>{{v}}</td>
                         <td>{{cbm}}</td>
-                        <td>1</td>
+                        <td class="op">1</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-wrap">
+            <h2>ITEMS NOT INCLUDED IN OPTIMAL LIST</h2>
+        </div>
+        <table>
+            <thead>
+                <th>Box No.</th>
+                <th>Weight</th>
+                <th>Cost/Profit</th>
+                <th>CBM</th>
+                <th class="os">Optimal Solution</th>
+            </thead>
+            <tbody>
+                {% for bl, w, v, cbm in dl %}
+                    <tr>
+                        <td>{{bl}}</td>
+                        <td>{{w}}</td>
+                        <td>{{v}}</td>
+                        <td>{{cbm}}</td>
+                        <td class="nop">0</td>
                     </tr>
                 {% endfor %}
             </tbody>
