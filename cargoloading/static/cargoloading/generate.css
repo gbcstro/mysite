@@ -68,23 +68,24 @@
 /* GENERATE.HTML CSS */
 
 .wrapper{
-    margin-right: 15px;
-    margin-left: 15px;
-    margin-top: 75px;
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    margin-right: 20%;
+    margin-left: 20%;
+    margin-top: 2%;
     padding: 15px;
+}
+
+.wrapper .text-wrapper{
+    padding: 12px;
 }
 
 .wrapper .label-wrapper{
     display: flex;
+    justify-content: space-around;
+    padding: 5px;
 }
 
 .wrapper .label-wrapper .form-labels{
     padding: 5px;
-    padding-left: 75px;
-    padding-right: 75px;
     font-size: 18px;
 }
 
@@ -126,18 +127,111 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+.or-text{
+    padding: 5px;
+    text-align: center;
+}
+
+.csv-wrapper{
+    padding: 15px;
+    margin-left: 35%;
+    margin-right: 35%;
+    background-color: #0A2239;
+    border-radius: 15px;
+}
+
+.csv-wrapper .text-wrapper{
+    color: white;
+    padding: 12px;
+}
+
+.csv-wrapper label{
+    color: white;
+    font-size: 18px;
+    padding: 12px;
+}
+
+.csv-wrapper label input{
+    color: white;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.csv-wrapper input[type="file"]{
+    font-size: 15px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.csv-wrapper input[type="number"]{
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.csv-wrapper input[type="text"]{
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+.csv-wrapper select{
+    font-size: 15px;
+    padding: 5px;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+.csv-wrapper input[type="number"]::placeholder {
+    font-size: 12px;
+    color: rgb(90, 88, 88);
+}
+
+.csv-wrapper input[type="text"]::placeholder {
+    font-size: 12px;
+    color: rgb(90, 88, 88);
+}
+
+.csv-wrapper .button-wrapper{
+    display: flex;
+    padding: 10px;
+}
+
+.csv-wrapper .b-space{
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.csv-wrapper .button-wrapper button{
+    background-color: #1D84B5;
+    color: #fff;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
+.csv-wrapper .button-wrapper button:hover{
+    background-color: white;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #1D84B5;
+    font-size: 18px;
+}
+
 .wrapper .button-wrapper{
     display: flex;
     justify-content: center;
     margin-top: 10px;
     padding: 10px 10px;
-    
 }
 
 .wrapper .button-wrapper .button-spacing{
     padding-left: 75px;
     padding-right: 75px;
-    
 }
 
 .wrapper .button-wrapper button{
@@ -155,7 +249,7 @@ input::-webkit-inner-spin-button {
     color: #1D84B5;
     padding: 5px 35px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     border: 2px solid #1D84B5;
     font-size: 18px;
 }

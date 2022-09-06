@@ -83,7 +83,6 @@
     color: #53A2BE;
 }
 
-
 .wrapper{
     margin-right: 15px;
     margin-left: 15px;
@@ -91,23 +90,31 @@
 }
 
 .wrapper .title-text{
-    padding: 12px;
+    padding: 5px;
     text-align: center;
     font-size: 25px;
     color: #052d53;
 }
 
 .table-wrapper{
-    padding: 12px;
+    padding: 2px;
 }
 
 .table-wrapper .text-wrap{
-   text-align: center;
+    padding: 8px;
+    text-align: center;
+    color: #052d53;
+}
+
+.table-wrapper .text-wrap h2{
+    font-size: 28px;
+    padding: 2px;
 }
 
 .table-wrapper table{
    margin-left: auto;
    margin-right: auto;
+   padding: 5px;
 }
 
 .table-wrapper table th{
@@ -154,19 +161,30 @@
     background-color: #D8D2CB;
 }
 
-.wrapper .text-wrap{
-    padding: 5px;
-    text-align: center;
+.total-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 32%;
+    margin-right: 32%;
     color: #052d53;
 }
 
-.wrapper .text-wrap h1{
-    font-size: 40px;
+.total-list .text-wrap{
+    padding: 12px;
 }
 
-.wrapper .text-wrap h2{
+.total-list .text-wrap h2{
+    padding: 2px;
+    font-size: 18px;
+}
+
+.total-list .text-wrap p{
     padding: 5px;
-    font-size: 35px;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    font-size: 16px;
+    text-align: center;
 }
 
 .wrapper .button-wrapper{

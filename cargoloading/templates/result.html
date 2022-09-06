@@ -13,7 +13,7 @@
 
 <div class="wrapper">
     <div class="title-text">
-        <h1>OPTIMAL SOLUTION</h1>
+        <h1>LIST OF ITEMS</h1>
     </div>
     
     <div class="table-wrapper">
@@ -27,7 +27,7 @@
                 <th>Width (cm)</th>
                 <th>CBM (kg)</th>
                 <th>Chargeable weight</th>
-                <th>Cost / Profit</th>
+                <th>Profit</th>
                 <th class="os">Optimal Solution</th>
               </thead>
               <tbody>
@@ -53,64 +53,123 @@
         </table>
     </div>
 
-    <div class="text-wrap">
-        <h1>TOTAL COST</h1>
-        <h2>{{total_cost}}</h2>
+    <div class="total-list">
+        <div class="text-wrap">
+            <h2>Num. of boxes:</h2>
+            <p>{{total_box}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total Weight:</h2>
+            <p>{{total_weight}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total Profit:</h2>
+            <p>{{total_cost}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total CBM:</h2>
+            <p>{{total_cbm}}</p>
+        </div>
+    </div>
+
+    <div class="title-text">
+        <h1>----- SUMMARY -----</h1>
     </div>
 
     <div class="table-wrapper">
-        <div class="text-wrap">
-            <h1>----- SUMMARY -----</h1>
-        </div>
+        {% if final_box %}
+            <div class="text-wrap">
+                <h2>OPTIMAL LIST</h2>
+            </div>
+            
+            <table>
+                <thead>
+                    <th>Box No.</th>
+                    <th>Weight</th>
+                    <th>Profit</th>
+                    <th>CBM</th>
+                    <th class="os">Optimal Solution</th>
+                </thead>
+                <tbody>
+                    {% for bl, w, v, cbm in fl %}
+                        <tr>
+                            <td>{{bl}}</td>
+                            <td>{{w}}</td>
+                            <td>{{v}}</td>
+                            <td>{{cbm}}</td>
+                            <td class="op">1</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        <div class="text-wrap">
-            <h2>OPTIMAL LIST</h2>
-        </div>
+            <div class="total-list">
+                <div class="text-wrap">
+                    <h2>Num. of boxes:</h2>
+                    <p>{{final_box}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total Weight:</h2>
+                    <p>{{final_weight}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total Profit:</h2>
+                    <p>{{final_cost}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total CBM:</h2>
+                    <p>{{final_cbm}}</p>
+                </div>
+            </div>
+        {% endif %}
 
-        <table>
-            <thead>
-                <th>Box No.</th>
-                <th>Weight</th>
-                <th>Cost/Profit</th>
-                <th>CBM</th>
-                <th class="os">Optimal Solution</th>
-            </thead>
-            <tbody>
-                {% for bl, w, v, cbm in fl %}
-                    <tr>
-                        <td>{{bl}}</td>
-                        <td>{{w}}</td>
-                        <td>{{v}}</td>
-                        <td>{{cbm}}</td>
-                        <td class="op">1</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        {% if drop_box %}
+            <div class="text-wrap">
+                <h2>ITEMS NOT INCLUDED IN OPTIMAL LIST</h2>
+            </div>
+            
+            <table>
+                <thead>
+                    <th>Box No.</th>
+                    <th>Weight</th>
+                    <th>Cost/Profit</th>
+                    <th>CBM</th>
+                    <th class="os">Optimal Solution</th>
+                </thead>
+                <tbody>
+                    {% for bl, w, v, cbm in dl %}
+                        <tr>
+                            <td>{{bl}}</td>
+                            <td>{{w}}</td>
+                            <td>{{v}}</td>
+                            <td>{{cbm}}</td>
+                            <td class="nop">0</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        <div class="text-wrap">
-            <h2>ITEMS NOT INCLUDED IN OPTIMAL LIST</h2>
-        </div>
-        <table>
-            <thead>
-                <th>Box No.</th>
-                <th>Weight</th>
-                <th>Cost/Profit</th>
-                <th>CBM</th>
-                <th class="os">Optimal Solution</th>
-            </thead>
-            <tbody>
-                {% for bl, w, v, cbm in dl %}
-                    <tr>
-                        <td>{{bl}}</td>
-                        <td>{{w}}</td>
-                        <td>{{v}}</td>
-                        <td>{{cbm}}</td>
-                        <td class="nop">0</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+            <div class="total-list">
+                <div class="text-wrap">
+                    <h2>Num. of boxes:</h2>
+                    <p>{{drop_box}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total Weight:</h2>
+                    <p>{{drop_weight}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total Profit:</h2>
+                    <p>{{drop_cost}}</p>
+                </div>
+                <div class="text-wrap">
+                    <h2>Total CBM:</h2>
+                    <p>{{drop_cbm}}</p>
+                </div>
+            </div>
+
+        {% endif %}
+
     </div>
 
     <div class="button-wrapper">

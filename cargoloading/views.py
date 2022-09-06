@@ -1,30 +1,15 @@
+import csv, io
 from xml.etree.ElementInclude import include
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
-from .forms import generateForm, tableForm
+from .forms import generateForm, uploadCSV, tableForm
 import numpy as np
 np.set_printoptions(suppress=True)
 
 def index(request):
     return render(request, 'index.html', {})
 
-def generate(request):
-    if request.method == 'POST':
-        form = generateForm(request.POST)
-        if form.is_valid():
-            request.session['num_box'] = request.POST['num_box']
-            request.session['cargo_type'] = request.POST['cargo_type']
-            request.session['capacity'] = request.POST['capacity']
-            request.session['ini_rate'] = request.POST['ini_rate']
-            box = form.cleaned_data['num_box']
-            print(box)
-            return redirect(table)         
-    else:
-        form = generateForm()
-
-    context = {"form":form, }
-    return render(request, 'generate.html', context)
-
+#Initial List
 description = []
 height = []
 length = []
@@ -34,81 +19,6 @@ cbm = []
 chargeable_weight = []
 value = []
 box = []
-
-def table(request):
-    box = request.session.get('num_box')
-    type = request.session.get('cargo_type')
-    capacity = request.session.get('capacity')
-    rate = request.session.get('ini_rate')
-
-    tableFormSet = formset_factory(tableForm,extra=int(box)-1, min_num=1, validate_min=True)
-    
-    if request.method == 'POST':
-        formset = tableFormSet(request.POST)
-        height.clear()
-        description.clear()
-        length.clear()
-        width.clear()
-        weight.clear()
-        cbm.clear()
-        chargeable_weight.clear()
-        value.clear()
-        
-        if formset.is_valid():
-            for d in formset:
-                data = d.cleaned_data
-                desc = data.get('description')
-                h = data.get('height')
-                l = data.get('length')
-                wdth = data.get('width')
-                wght = data.get('weight')
-                hl = h * l #height_length
-                prod = (hl * wdth) / 1000000 #prod
-                c = prod * 333 #cbm_charge
-                print(d.cleaned_data)
-                
-                try:
-                    height.append(round(float(h)))
-                    description.append(desc)
-                    length.append(round(float(l)))
-                    width.append(round(float(wdth)))
-                    weight.append(int(wght))
-                    cbm.append(round(c))
-                except:
-                    description.clear
-                    formset = tableFormSet(request.POST)
-            
-            #charge_list
-            for i in range(0,int(box)):
-                if (weight[i] > cbm[i]):
-                    chargeable_weight.append(weight[i])
-                elif (cbm[i] > weight[i]):
-                    chargeable_weight.append(cbm[i])
-                elif (weight[i] == cbm[i]):
-                    chargeable_weight.append(weight[i])
-
-            #profi_list
-            for i in range(0,int(box)):
-                profit = chargeable_weight[i] * int(rate) 
-                value.append(round(float(profit)))
-                    
-            return redirect(result)
-
-        else:
-            print(formset.errors)
-        
-    else:
-        formset = tableFormSet()
-    
-    context = {
-        "box":box, 
-        "type":type,
-        "capacity":capacity, 
-        "rate":rate,
-        'formset':formset,
-    }
-
-    return render(request, 'table.html', context)
 
 #List of not included items
 xboxList = []
@@ -122,27 +32,224 @@ wghtList = []
 cbmList = []
 valList = []
 
+def generate(request):
+    height.clear()
+    description.clear()
+    length.clear()
+    width.clear()
+    weight.clear()
+    cbm.clear()
+    chargeable_weight.clear()
+    value.clear()
+
+    if request.method == 'POST':
+        form = generateForm(request.POST)
+        csvform = uploadCSV(request.POST, request.FILES)
+        if form.is_valid():
+            request.session['num_box'] = request.POST['num_box']
+            request.session['cargo_type'] = request.POST['cargo_type']
+            request.session['capacity'] = request.POST['capacity']
+            request.session['ini_rate'] = request.POST['ini_rate']
+            box = form.cleaned_data['num_box']
+            print(box)
+            return redirect(table)
+
+        if csvform.is_valid():
+            request.session['cargo_type'] = request.POST['cargo_type']
+            request.session['capacity'] = request.POST['capacity']
+            request.session['ini_rate'] = request.POST['ini_rate']
+
+            type = csvform.cleaned_data['cargo_type']
+            capacity = csvform.cleaned_data['capacity']
+            rate = csvform.cleaned_data['ini_rate']
+
+            file = request.FILES['csvFile']
+            data_set = file.read().decode('utf-8')
+            data = io.StringIO(data_set)
+            next(data)
+            for d in csv.reader(data):
+                print(d)
+                h = float(d[1])
+                l = float(d[2])
+                wdth = float(d[3])
+                wght = float(d[4])
+
+                hl = h * l #height_length
+                prod = (hl * wdth) / 1000000 #prod
+                c = prod * 333 #cbm_charge
+
+                description.append(d[0])
+                height.append(round(h))
+                length.append(round(l))
+                width.append(round(wdth))
+                weight.append(int(wght))
+                cbm.append(round(c))
+
+            print(description)
+            print(height)
+            print(length)
+            print(height)
+            print(width)
+            print(weight)
+            print(cbm)
+            box = len(cbm)
+            print(box)
+            #charge_list
+            for i in range(0,int(box)):
+                if (weight[i] > cbm[i]):
+                    chargeable_weight.append(weight[i])
+                elif (cbm[i] > weight[i]):
+                    chargeable_weight.append(cbm[i])
+                elif (weight[i] == cbm[i]):
+                    chargeable_weight.append(weight[i])
+
+            print(chargeable_weight)
+
+            #profi_list
+            for i in range(0,int(box)):
+                profit = chargeable_weight[i] * int(rate)
+                value.append(round(float(profit)))
+            
+            print(value)
+
+            return redirect(result)
+
+
+    else:
+        form = generateForm(request.POST)
+        csvform = uploadCSV(request.POST, request.FILES)
+
+    context = {
+        'form':form,
+        'csv':csvform,
+        }
+
+    return render(request, 'generate.html', context)
+
+def table(request):
+    box = request.session.get('num_box')
+    type = request.session.get('cargo_type')
+    capacity = request.session.get('capacity')
+    rate = request.session.get('ini_rate')
+
+    tableFormSet = formset_factory(tableForm,extra=int(box)-1, min_num=1, validate_min=True)
+
+    if request.method == 'POST':
+        formset = tableFormSet(request.POST)
+
+        if formset.is_valid():
+            height.clear()
+            description.clear()
+            length.clear()
+            width.clear()
+            weight.clear()
+            cbm.clear()
+            chargeable_weight.clear()
+            value.clear()
+
+            for d in formset:
+                data = d.cleaned_data
+                desc = data.get('description')
+                h = data.get('height')
+                l = data.get('length')
+                wdth = data.get('width')
+                wght = data.get('weight')
+                hl = h * l #height_length
+                prod = (hl * wdth) / 1000000 #prod
+                c = prod * 333 #cbm_charge
+                print(d.cleaned_data)
+
+                try:
+                    height.append(round(float(h)))
+                    description.append(desc)
+                    length.append(round(float(l)))
+                    width.append(round(float(wdth)))
+                    weight.append(int(wght))
+                    cbm.append(round(c))
+                except:
+                    description.clear
+                    formset = tableFormSet(request.POST)
+
+            #charge_list
+            for i in range(0,int(box)):
+                if (weight[i] > cbm[i]):
+                    chargeable_weight.append(weight[i])
+                elif (cbm[i] > weight[i]):
+                    chargeable_weight.append(cbm[i])
+                elif (weight[i] == cbm[i]):
+                    chargeable_weight.append(weight[i])
+
+            #profi_list
+            for i in range(0,int(box)):
+                profit = chargeable_weight[i] * int(rate)
+                value.append(round(float(profit)))
+
+            return redirect(result)
+
+        else:
+            print(formset.errors)
+
+    else:
+        formset = tableFormSet()
+
+    context = {
+        "box":box,
+        "type":type,
+        "capacity":capacity,
+        "rate":rate,
+        'formset':formset,
+    }
+
+    return render(request, 'table.html', context)
+
+
+
 def result(request):
     capacity = request.session.get('capacity')
-    boxes = request.session.get('num_box')
+    boxes = len(cbm)
     volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
 
-   
+    box.clear()
     for i in range(int(boxes)+1):
         if i != 0:
             box.append(i)
-    
+
     dynamic_Prog(weight, value, int(capacity), int(boxes), int(volume), cbm)
     print(boxList)
     table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
-    drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
+    #Summary of inputs
+    total_cost = sum(value)
+    total_weight = sum(weight)
+    total_box = len(box)
+    total_cbm = sum(cbm)
+
     final_list = zip(boxList,wghtList,valList,cbmList)
-    total_cost = sum(valList)
-    total_cbm = sum(cbmList)
+    #Summary of final solution
+    final_cost = sum(valList)
+    final_weight = sum(wghtList)
+    final_box = len(boxList)
+    final_cbm = sum(cbmList)
+
+    drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
+    #Summary of drop list
+    drop_cost = sum(xvalList)
+    drop_weight = sum(xwghtList)
+    drop_box = len(xboxList)
+    drop_cbm = sum(xcbmList)
 
     context = {
         'total_cbm':total_cbm,
         'total_cost':total_cost,
+        'total_weight':total_weight,
+        'total_box':total_box,
+        'final_cost':final_cost,
+        'final_weight':final_weight,
+        'final_box':final_box,
+        'final_cbm':final_cbm,
+        'drop_cost':drop_cost,
+        'drop_weight':drop_weight,
+        'drop_box':drop_box,
+        'drop_cbm':drop_cbm,
         'bl':boxList,
         'tl':table_list,
         'dl':drop_list,
@@ -170,11 +277,11 @@ def dynamic_Prog(W, V, M, n, C, Z):
             else:
                 bin_Table[i][j] = bin_Table[i-1][j]
 
-    print("Max Profit: ", bin_Table[n][M])
-    print("Maximum Capacity (Weight): ", M)
-    print("Maximum Capacity (Volume): ", C)
-    print("\nSelected Packs: ")
-    print("Box No.\tWeight\tProfit/Value\tCBM")
+    # print("Max Profit: ", bin_Table[n][M])
+    # print("Maximum Capacity (Weight): ", M)
+    # print("Maximum Capacity (Volume): ", C)
+    # print("\nSelected Packs: ")
+    # print("Box No.\tWeight\tProfit/Value\tCBM")
 
     while (n != 0):
         if (bin_Table[n][M] != bin_Table[n-1][M]):
@@ -193,18 +300,19 @@ def dynamic_Prog(W, V, M, n, C, Z):
     # optimal_set = optimal_set[optimal_set[:, 2].argsort()[
         #::-1]]  # TANGALIN 'TO
 
-    print("\n\n******INITIAL OPTIMAL SOLUTION (Weight Constraint Only)******")
-    print("Box No.\tWeight\tProfit/Value\tCBM")
+    # print("\n\n******INITIAL OPTIMAL SOLUTION (Weight Constraint Only)******")
+    # print("Box No.\tWeight\tProfit/Value\tCBM")
+
     # YUNG DITO GAWING 0 YUNG -1
     optimal_set = np.delete(optimal_set, 0, axis=0)
-    print(optimal_set)
+    # print(optimal_set)
 
     cbmSum = sum(optimal_set[:, -1])
 
-    print('\nTotal Number of Boxes: ' + str(len(optimal_set[:, 0])),
-          '\nTotal Weight: ' + str(sum(optimal_set[:, 1])),
-          '\nTotal Profit: ' + str(sum(optimal_set[:, 2])),
-          '\nTotal Volume: ' + str("{:.2f}".format(cbmSum)))
+    # print('\nTotal Number of Boxes: ' + str(len(optimal_set[:, 0])),
+    #       '\nTotal Weight: ' + str(sum(optimal_set[:, 1])),
+    #       '\nTotal Profit: ' + str(sum(optimal_set[:, 2])),
+    #       '\nTotal Volume: ' + str("{:.2f}".format(cbmSum)))
 
     # INITIAL optimal_set VALUES (weight constraint only)
     numOfBoxes_init = int(len(optimal_set[:, 0]))
@@ -260,10 +368,10 @@ def dynamic_Prog(W, V, M, n, C, Z):
     Final_optimal_set = Final_optimal_set[Final_optimal_set[:, 2].argsort()[
         ::-1]]
 
-    print("\n\n******FINAL OPTIMAL SOLUTION (Weight Constraint and Volume Constraint)******")
-    print("Box No.\tWeight\tProfit/Value\tCBM")
+    # print("\n\n******FINAL OPTIMAL SOLUTION (Weight Constraint and Volume Constraint)******")
+    # print("Box No.\tWeight\tProfit/Value\tCBM")
     Final_optimal_set = np.delete(Final_optimal_set, -1, axis=0)
-    print(Final_optimal_set)
+    # print(Final_optimal_set)
 
     boxList.clear()
     wghtList.clear()
@@ -274,22 +382,22 @@ def dynamic_Prog(W, V, M, n, C, Z):
         boxList.append(i[0])
         wghtList.append(i[1])
         valList.append(i[2])
-        cbmList.append(i[3]) 
+        cbmList.append(i[3])
 
     finalcbmSum = sum(Final_optimal_set[:, -1])
 
-    print('\nTotal Number of Boxes: ' + str(len(Final_optimal_set[:, 0])),
-          '\nTotal Weight: ' + str(sum(Final_optimal_set[:, 1])),
-          '\nTotal Profit: ' + str(sum(Final_optimal_set[:, 2])),
-          '\nTotal Volume: ' + str("{:.2f}".format(finalcbmSum)))
+    # print('\nTotal Number of Boxes: ' + str(len(Final_optimal_set[:, 0])),
+    #       '\nTotal Weight: ' + str(sum(Final_optimal_set[:, 1])),
+    #       '\nTotal Profit: ' + str(sum(Final_optimal_set[:, 2])),
+    #       '\nTotal Volume: ' + str("{:.2f}".format(finalcbmSum)))
 
     # DESCENDING ORDER FOR PROFIT/VALUE NG ITEMS NA DI MAIINCLUDE SA FINAL OPTIMAL SOLUTION
     not_included = not_included[not_included[:, 2].argsort()[
         ::-1]]
-    print("\n\n******ITEMS NOT INCLUDED IN THE OPTIMAL SOLUTION******")
-    print("Box No.\tWeight\tProfit/Value\tCBM")
+    # print("\n\n******ITEMS NOT INCLUDED IN THE OPTIMAL SOLUTION******")
+    # print("Box No.\tWeight\tProfit/Value\tCBM")
     not_included = np.delete(not_included, -1, axis=0)
-    print(not_included)
+    # print(not_included)
 
     xboxList.clear()
     xwghtList.clear()
@@ -300,7 +408,7 @@ def dynamic_Prog(W, V, M, n, C, Z):
         xboxList.append(i[0])
         xwghtList.append(i[1])
         xvalList.append(i[2])
-        xcbmList.append(i[3]) 
+        xcbmList.append(i[3])
 
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
@@ -328,11 +436,11 @@ def dynamic_Prog(W, V, M, n, C, Z):
         print("The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume.")
     else:
         print("It is better to use big trucks in loading the remaining items")
-    
 
-    
-    
 
-    
-          
+
+
+
+
+
 

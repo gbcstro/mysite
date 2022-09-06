@@ -8,6 +8,11 @@
 {% block content %}
 
 <div class="wrapper">
+
+  <div class="text-wrapper">
+    <h2>Fill up the required parameters:</h2>
+  </div>
+
   <form method="POST">
     {% csrf_token %}
     <div class="label-wrapper">
@@ -39,8 +44,6 @@
       </div>
     </div>
 
-    
-
     <div class="button-wrapper">
       <div class="button-spacing">
         <button type="submit">Submit</button>
@@ -51,6 +54,43 @@
     </div>
  
   </form>
+</div>
+
+<div class="csv-wrapper">
+
+  <div class="text-wrapper">
+    <h2>File Upload:</h2>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Upload a csv file:</label>
+    {{csv.csvFile}}
+    <br>
+    <br>
+    <label>Cargo Type:</label>
+    {{csv.cargo_type}}
+    <br>
+    <br>
+    <label>Type of vehicle:</label>
+    {{csv.capacity}}
+    <br>
+    <br>
+    <label>Initial Rate:</label>
+    {{csv.ini_rate}}
+
+    <div class="button-wrapper">
+      <div class="b-space">
+        <button type="submit">Upload</button>
+      </div>
+      <div class="b-space">
+        <button type="reset">Reset</button>
+      </div>
+      
+    </div>
+
+  </form>
+
 </div>
 
 {% endblock content %}
