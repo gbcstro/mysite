@@ -5,3 +5,4 @@ numpy==1.23.2
 sqlparse==0.4.2
 tzdata==2022.2
 whitenoise==6.2.0
+django-cloudinary-storage==0.3.0
