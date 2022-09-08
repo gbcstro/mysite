@@ -1,4 +1,5 @@
 {% load static %}
+{% load custom_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,14 +21,14 @@
     <body>
       <div class="navigation-bar">
         <ul class="nav-title">
-          <li><img src="{% static 'cargoloading/images/icon.png' %}" alt="Logo" width="50" height="50"></li>
+          <li><img src="{% static 'cargoloading/images/logo.png' %}" alt="Logo" width="50" height="50"></li>
           <li><a href="{% url 'index' %}">Cargo Loading</a></li>
         </ul>
       
         <ul class="nav-links">
           <li><a href="{% url 'index' %}">Home</a></li>
-          <li><a href="#">Information</a></li>
-          <li><a href="#">About Us</a></li>
+          <li><a href="{% anchor 'index' 'information' %}">Information</a></li>
+          <li><a href="{% anchor 'index' 'about' %}">About Us</a></li>
         </ul>
       </div>
 

@@ -1,5 +1,6 @@
 import csv, io
-from xml.etree.ElementInclude import include
+from tkinter import X
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, tableForm
@@ -41,10 +42,12 @@ def generate(request):
     cbm.clear()
     chargeable_weight.clear()
     value.clear()
+    error_message = " "
 
     if request.method == 'POST':
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
+        
         if form.is_valid():
             request.session['num_box'] = request.POST['num_box']
             request.session['cargo_type'] = request.POST['cargo_type']
@@ -66,55 +69,59 @@ def generate(request):
             file = request.FILES['csvFile']
             data_set = file.read().decode('utf-8')
             data = io.StringIO(data_set)
-            next(data)
-            for d in csv.reader(data):
-                print(d)
-                h = float(d[1])
-                l = float(d[2])
-                wdth = float(d[3])
-                wght = float(d[4])
+            try:
+                for c in csv.reader(data):
+                    if c[0].lower() == "description" and c[1].lower() == "height" and c[2].lower() == "length" and c[3].lower() == "width" and c[4].lower() == "weight":
+                        break
+                    else:
+                        raise ValueError
 
-                hl = h * l #height_length
-                prod = (hl * wdth) / 1000000 #prod
-                c = prod * 333 #cbm_charge
+                for d in csv.reader(data):
+                    description.append(d[0])
 
-                description.append(d[0])
-                height.append(round(h))
-                length.append(round(l))
-                width.append(round(wdth))
-                weight.append(int(wght))
-                cbm.append(round(c))
+                    if d[1] == " " and d[2] == " " and d[3] == " " and d[4] == " ":
+                        raise TypeError
 
-            print(description)
-            print(height)
-            print(length)
-            print(height)
-            print(width)
-            print(weight)
-            print(cbm)
-            box = len(cbm)
-            print(box)
-            #charge_list
-            for i in range(0,int(box)):
-                if (weight[i] > cbm[i]):
-                    chargeable_weight.append(weight[i])
-                elif (cbm[i] > weight[i]):
-                    chargeable_weight.append(cbm[i])
-                elif (weight[i] == cbm[i]):
-                    chargeable_weight.append(weight[i])
+                    h = float(d[1])
+                    l = float(d[2])
+                    wdth = float(d[3])
+                    wght = float(d[4])
+                    
+                    hl = h * l #height_length
+                    prod = (hl * wdth) / 1000000 #prod
+                    c = prod * 333 #cbm_charge
 
-            print(chargeable_weight)
+                    height.append(round(h))
+                    length.append(round(l))
+                    width.append(round(wdth))
+                    weight.append(int(wght))
+                    cbm.append(round(c))
 
-            #profi_list
-            for i in range(0,int(box)):
-                profit = chargeable_weight[i] * int(rate)
-                value.append(round(float(profit)))
-            
-            print(value)
+                box = len(cbm)
+                #charge_list
+                for i in range(0,int(box)):
+                    if (weight[i] > cbm[i]):
+                        chargeable_weight.append(weight[i])
+                    elif (cbm[i] > weight[i]):
+                        chargeable_weight.append(cbm[i])
+                    elif (weight[i] == cbm[i]):
+                        chargeable_weight.append(weight[i])
 
-            return redirect(result)
+                #profi_list
+                for i in range(0,int(box)):
+                    profit = chargeable_weight[i] * int(rate)
+                    value.append(round(float(profit)))
 
-
+                return redirect(result)
+            except ValueError:
+                form = generateForm(request.POST)
+                csvform = uploadCSV(request.POST, request.FILES)
+                error_message = "Invalid column name/s! Please follow the sample format."
+            except:
+                form = generateForm(request.POST)
+                csvform = uploadCSV(request.POST, request.FILES)
+                error_message = "There is a invalid or missing data in the required parameters of the CSV file!"
+                
     else:
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
@@ -122,6 +129,7 @@ def generate(request):
     context = {
         'form':form,
         'csv':csvform,
+        'error':error_message,
         }
 
     return render(request, 'generate.html', context)
@@ -157,7 +165,6 @@ def table(request):
                 hl = h * l #height_length
                 prod = (hl * wdth) / 1000000 #prod
                 c = prod * 333 #cbm_charge
-                print(d.cleaned_data)
 
                 try:
                     height.append(round(float(h)))
@@ -215,7 +222,7 @@ def result(request):
             box.append(i)
 
     dynamic_Prog(weight, value, int(capacity), int(boxes), int(volume), cbm)
-    print(boxList)
+
     table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
     #Summary of inputs
     total_cost = sum(value)
@@ -237,6 +244,17 @@ def result(request):
     drop_box = len(xboxList)
     drop_cbm = sum(xcbmList)
 
+    if drop_weight == 0 and drop_cbm == 0:
+        recommendation = "No recommendations needed."
+    elif (drop_weight <= 600 or drop_weight != 0) and (drop_cbm <= 666 or drop_cbm != 0):
+        recommendation = "The recommended vehicle to load the remaining box/es is a light van with a maximum capacity of 600 kg in terms of weight and a maximum capacity of 666 kg in terms of volume."
+    elif (drop_weight > 600 or drop_weight <= 1000) and (drop_cbm > 666 or drop_cbm <= 999):
+        recommendation = "The recommended vehicle to load the remaining box/es is an L300 van with a maximum capacity of 1000 kg in terms of weight and a maximum capacity of 999 kg in terms of volume."
+    elif (drop_weight > 1000 or drop_weight <= 2000) and (drop_cbm > 999 or drop_cbm <= 3330):
+        recommendation = "The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume."
+    else:
+        recommendation = "It is better to use big trucks in loading the remaining items"
+
     context = {
         'total_cbm':total_cbm,
         'total_cost':total_cost,
@@ -254,6 +272,7 @@ def result(request):
         'tl':table_list,
         'dl':drop_list,
         'fl':final_list,
+        'recom':recommendation,
     }
     return render(request, 'result.html', context)
 
@@ -285,7 +304,7 @@ def dynamic_Prog(W, V, M, n, C, Z):
 
     while (n != 0):
         if (bin_Table[n][M] != bin_Table[n-1][M]):
-            print(n, "\t", W[n-1], "\t", V[n-1], "\t\t", Z[n-1])
+            #print(n, "\t", W[n-1], "\t", V[n-1], "\t\t", Z[n-1])
             row = np.array([n, W[n-1],  V[n-1], Z[n-1]])
             optimal_set = np.append(optimal_set, [row], axis=0)
 
@@ -414,17 +433,6 @@ def dynamic_Prog(W, V, M, n, C, Z):
     notincluded_numBox = int(len(not_included[:, 0]))
     NI_weightSum = sum(not_included[:, 1])
 
-    if notincluded_numBox == 0:
-        print('\nTotal Number of Boxes: 0',
-              '\nTotal Weight: ' + str(sum(not_included[:, 1])),
-              '\nTotal Profit: ' + str(sum(not_included[:, 2])),
-              '\nTotal Volume: ' + str("{:.2f}".format(not_includedcbmSum)))
-    else:
-        print('\nTotal Number of Boxes: ' + str(notincluded_numBox),
-              '\nTotal Weight: ' + str(sum(not_included[:, 1])),
-              '\nTotal Profit: ' + str(sum(not_included[:, 2])),
-              '\nTotal Volume: ' + str("{:.2f}".format(not_includedcbmSum)))
-
     print("\nRECOMMENDATION:")
     if NI_weightSum == 0 and not_includedcbmSum == 0:
         print("No recommendations needed.")
@@ -436,6 +444,7 @@ def dynamic_Prog(W, V, M, n, C, Z):
         print("The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume.")
     else:
         print("It is better to use big trucks in loading the remaining items")
+    
 
 
 

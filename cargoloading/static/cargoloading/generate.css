@@ -127,13 +127,47 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
-.or-text{
+.wrapper .upload-button{
     padding: 5px;
-    text-align: center;
+}
+
+.wrapper .upload-button button{
+    background-color: #0A2239;
+    color: #fff;
+    padding: 6px 35px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.wrapper .upload-button button:hover{
+    background-color: white;
+    color: #0A2239;
+    padding: 6px 35px;
+    border-radius: 8px;
+    font-size: 18px;
+}
+
+.modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal i {
+    float: right;
+    font-size: 25px;
+    color: red;
 }
 
 .csv-wrapper{
     padding: 15px;
+    margin: 15%;
     margin-left: 35%;
     margin-right: 35%;
     background-color: #0A2239;
@@ -220,6 +254,27 @@ input::-webkit-inner-spin-button {
     border-radius: 8px;
     border: 2px solid #1D84B5;
     font-size: 18px;
+}
+
+.sample-format{
+    padding: 5px;
+}
+
+.sample-format h4{
+    color: yellow;
+    font-size: 16px;
+}
+
+.sample-format img{
+    padding: 12px;
+}
+
+.error-message{
+    text-align: center;
+    padding: 8px;
+    color: red;
+    font-size: 24px;
+    font-weight: bolder;
 }
 
 .wrapper .button-wrapper{
