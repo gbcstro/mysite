@@ -1,6 +1,4 @@
 import csv, io
-from tkinter import X
-from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, tableForm
@@ -121,7 +119,7 @@ def generate(request):
                 form = generateForm(request.POST)
                 csvform = uploadCSV(request.POST, request.FILES)
                 error_message = "There is a invalid or missing data in the required parameters of the CSV file!"
-                
+
     else:
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
