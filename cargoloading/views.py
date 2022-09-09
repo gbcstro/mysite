@@ -129,6 +129,7 @@ def generate(request):
 
     return render(request, 'generate.html', context)
 
+
 def table(request):
     box = request.session.get('num_box')
     type = request.session.get('cargo_type')
@@ -203,8 +204,6 @@ def table(request):
     }
 
     return render(request, 'table.html', context)
-
-
 
 def result(request):
     capacity = request.session.get('capacity')

@@ -1,8 +1,8 @@
-import csv, io, numbers
+import csv, io
 from django.conf import settings
 from django import forms
 from django.core.exceptions import ValidationError
-from .models import *
+
 
 vehicles = [
         (600,'MPV (600 kg)'),
