@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import django_heroku
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -84,11 +85,11 @@ DATABASES = {
     # }
 
     'default':{
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cargo-loading',
-        'USER': 'postgres',
-        'PASSWORD': 'gabriel2001',
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd5ivucvbifrk07',
+        'USER': 'vnmebiyaiabyau',
+        'PASSWORD': 'ed2753aa229531fcff8351b9e59ddf9b294792e69880105152e35c975625227c',
+        'HOST': 'ec2-3-208-79-113.compute-1.amazonaws.com',
         'POST': '5432',
     }
 }
@@ -129,8 +130,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = os.path.join(BASE_DIR, 'static'),
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -143,4 +143,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+django_heroku.setting(locals())
 
