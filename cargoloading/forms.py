@@ -24,6 +24,7 @@ class uploadCSV(forms.Form):
     capacity = forms.IntegerField(widget=forms.Select(choices=vehicles))
     ini_rate = forms.DecimalField(widget=forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"5","step":"0.01"}),)
     csvFile = forms.FileField(widget=forms.FileInput(attrs={'accept': ".csv"}))
+    
 
     def validateFileData(self):
         file = self.cleaned_data['csvFile']

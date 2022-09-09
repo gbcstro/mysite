@@ -9,15 +9,15 @@ def index(request):
     return render(request, 'index.html', {})
 
 #Initial List
-description = []
-height = []
-length = []
-width = []
-weight = []
-cbm = []
-chargeable_weight = []
-value = []
-box = []
+description = [0]
+height = [0]
+length = [0]
+width = [0]
+weight = [0]
+cbm = [0]
+chargeable_weight = [0]
+value = [0]
+box = [0]
 
 #List of not included items
 xboxList = []
@@ -115,7 +115,7 @@ def generate(request):
                 form = generateForm(request.POST)
                 csvform = uploadCSV(request.POST, request.FILES)
                 error_message = "Invalid column name/s! Please follow the sample format."
-            except:
+            else:
                 form = generateForm(request.POST)
                 csvform = uploadCSV(request.POST, request.FILES)
                 error_message = "There is a invalid or missing data in the required parameters of the CSV file!"
