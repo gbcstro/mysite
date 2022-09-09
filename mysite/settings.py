@@ -84,12 +84,12 @@ DATABASES = {
     # }
 
     'default':{
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cargo-loading',
         'USER': 'postgres',
         'PASSWORD': 'gabriel2001',
         'HOST': 'localhost',
-        'POST': '5432'
+        'POST': '5432',
     }
 }
 
