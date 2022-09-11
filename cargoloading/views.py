@@ -9,15 +9,15 @@ def index(request):
     return render(request, 'index.html', {})
 
 #Initial List
-description = [0]
-height = [0]
-length = [0]
-width = [0]
-weight = [0]
-cbm = [0]
-chargeable_weight = [0]
-value = [0]
-box = [0]
+description = []
+height = []
+length = []
+width = []
+weight = []
+cbm = []
+chargeable_weight = []
+value = []
+box = []
 
 #List of not included items
 xboxList = []
@@ -51,18 +51,14 @@ def generate(request):
             request.session['cargo_type'] = request.POST['cargo_type']
             request.session['capacity'] = request.POST['capacity']
             request.session['ini_rate'] = request.POST['ini_rate']
-            box = form.cleaned_data['num_box']
-            print(box)
             return redirect(table)
 
         if csvform.is_valid():
+            rate = csvform.cleaned_data['ini_rate']
+    
             request.session['cargo_type'] = request.POST['cargo_type']
             request.session['capacity'] = request.POST['capacity']
             request.session['ini_rate'] = request.POST['ini_rate']
-
-            type = csvform.cleaned_data['cargo_type']
-            capacity = csvform.cleaned_data['capacity']
-            rate = csvform.cleaned_data['ini_rate']
 
             file = request.FILES['csvFile']
             data_set = file.read().decode('utf-8')

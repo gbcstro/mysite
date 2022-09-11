@@ -8,6 +8,290 @@
 }
 
 /* BASE.HTML CSS */
+.navigation-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px;
+    text-decoration: none;
+    background-color: #176087;
+}
+
+.nav-title {
+    display: inline-flex;
+    padding: 4px 8px;
+    list-style: none;
+}
+
+.navigation-bar .nav-title li img{
+    margin-right: 5px;
+}
+
+.navigation-bar .nav-title li a{
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.nav-links{
+    display: inline-flex;
+    padding: 4px 8px;
+    list-style: none;
+}
+
+.navigation-bar .nav-links li {
+    padding: 5px;
+}
+
+.navigation-bar .nav-links li a{
+    padding: 2px 15px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    color: white;
+}
+
+.navigation-bar .nav-links li a:hover{
+    padding: 2px 15px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 800;
+    background: white;
+    color: rgb(4, 103, 184);
+}
+
+/* ----------------- */
+
+/* RESULTS */
+.back{
+    float: left;
+    margin: 15px;
+    font-size: 34px;
+    color:#0A2239
+}
+ 
+.back i:hover{
+    color: #53A2BE;
+}
+
+.wrapper{
+    margin-right: 15px;
+    margin-left: 15px;
+    padding: 15px;   
+}
+
+.wrapper .title-text{
+    padding: 5px;
+    text-align: center;
+    font-size: 25px;
+    color: #052d53;
+}
+
+.table-wrapper{
+    padding: 2px;
+}
+
+.table-wrapper .text-wrap{
+    padding: 8px;
+    text-align: center;
+    color: #052d53;
+}
+
+.table-wrapper .text-wrap h2{
+    font-size: 28px;
+    padding: 2px;
+}
+
+.table-wrapper table{
+   margin-left: auto;
+   margin-right: auto;
+   padding: 5px;
+}
+
+.table-wrapper table th{
+    padding: 15px;
+    background-color: #53A2BE;
+    color: white;
+    font-size: 15px;
+}
+
+.table-wrapper table .os{
+    padding: 15px;
+    background-color: #132E32;
+    color: white;
+    font-size: 15px;
+}
+
+.table-wrapper table td{
+    font-size: 15px;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+}
+
+.table-wrapper table .op{
+    font-size: 15px;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    background-color: #132E32;
+    color: white;
+}
+
+.table-wrapper table .nop{
+    font-size: 15px;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    background-color: #D8D2CB;
+}
+
+.total-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 32%;
+    margin-right: 32%;
+    color: #052d53;
+}
+
+.total-list .text-wrap{
+    padding: 12px;
+}
+
+.total-list .text-wrap h2{
+    padding: 2px;
+    font-size: 18px;
+}
+
+.total-list .text-wrap p{
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    font-size: 16px;
+    text-align: center;
+}
+
+.recom{
+    margin-left: 20%;
+    margin-right: 20%;
+    padding: 5px;
+    background-color: #132E32;
+    border-radius: 8px;
+}
+
+.recom h2{
+    padding: 5px;
+    color: yellow;
+}
+
+.recom p{
+    padding: 5px;
+    color: white;
+    font: 12px;
+}
+
+.wrapper .button-wrapper{
+    text-align: center;
+    padding: 5px;
+}
+
+.wrapper .button-wrapper button{
+    background-color: #0A2239;
+    color: #fff;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 18px;
+}
+.wrapper .button-wrapper button:hover{
+    background-color: white;
+    color:#0A2239;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 18px;
+}
+
+/*--- DIALOG -- */
+
+.modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal-wrapper {
+    background-color: #0A2239;
+    margin: 15%; /* 15% from the top and centered */
+    margin-left: 20%;
+    margin-right: 20%;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+}
+
+.modal-wrapper p{
+    text-align: center;
+    font-size: 35px;
+    font-weight: 800;
+    padding: 25px;
+    color: white;
+}
+
+.modal-wrapper .button-wrapper{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    padding: 10px 10px
+}
+
+.modal-wrapper .button-wrapper .button-spacing{
+    padding-left: 75px;
+    padding-right: 75px;
+    
+}
+
+.modal-wrapper .button-wrapper button{
+    background-color: #53A2BE;
+    color: #fff;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.modal-wrapper .button-wrapper button:hover{
+    background-color: white;
+    color: #53A2BE;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+
+@media only screen and (min-width:768px){
+    /* BASE.HTML CSS */
 
 *{
     margin: 0;
@@ -295,4 +579,6 @@
     border: 2px solid #0A2239;
     font-size: 22px;
     font-weight: bold;
+}
+
 }

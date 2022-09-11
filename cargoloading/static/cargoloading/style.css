@@ -8,62 +8,60 @@
 }
 
 .bg{
-    background-image: linear-gradient(rgba(0, 0, 0, 0.219), rgba(0,0,0,0.219)), url("images/background.jpg");
+    background-image: linear-gradient(rgba(54, 5, 5, 0.151), rgba(0,0,0,0.219)), url("images/background.jpg");
     height: auto;    
+    width: auto;
     background-size: cover;
     background-attachment: fixed;
 }
-
 
 .navigation-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.7px 20px;
     text-decoration: none;
-    
+    padding: 2px;
 }
 
 .nav-title {
     display: inline-flex;
-    padding: 10px 20px;
-    margin-left: 50px;
+    padding: 4px 8px;
     list-style: none;
 }
 
 .navigation-bar .nav-title li img{
-    padding-right: 20px;
+    margin-right: 5px;
 }
 
 .navigation-bar .nav-title li a{
     text-decoration: none;
-    font-size: 35px;
+    font-size: 12px;
     font-weight: bold;
     color: white;
 }
 
 .nav-links{
     display: inline-flex;
-    margin-right: 50px;
+    padding: 4px 8px;
     list-style: none;
 }
 
 .navigation-bar .nav-links li {
-    padding: 5px 20px;
+    padding: 5px;
 }
 
 .navigation-bar .nav-links li a{
-    padding: 5px 20px;
+    padding: 2px 15px;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 800;
     color: white;
 }
 
 .navigation-bar .nav-links li a:hover{
-    padding: 5px 20px;
+    padding: 2px 15px;
     text-decoration: none;
-    font-size: 18px;
+    font-size: 12px;
     font-weight: 800;
     background: white;
     color: rgb(4, 103, 184);
@@ -78,14 +76,14 @@
 
 .welcome-text h1{
     color: white;
-    font-size: 75px;
+    font-size: 45px;
     font-weight: bold;
 }
 
 .welcome-text p{
     color: white;
     padding: 10px 25px;
-    font-size: 20px;
+    font-size: 17px;
     margin-top: 10px;
 }
 
@@ -96,11 +94,11 @@
 
 
 .welcome-text .get-started a{
-    padding: 15px 25px;
+    padding: 5px 20px;
     border-radius: 30px;
     background: rgb(4, 103, 184);
     color: white;
-    font-size: 35px;
+    font-size: 21px;
     font-weight: bold;
     text-decoration: none;
 }
@@ -129,7 +127,7 @@
 
 .text-wrapper .text-wrap h1{
     padding: 12px;
-    font-size: 45px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -137,6 +135,142 @@
     margin-left: 5%;
     margin-right: 5%;
     padding: 12px;
-    font-size: 18px;
+    font-size: 12px;
 }
+
+@media only screen and (min-width: 768px){
+    .bg{
+        background-image: linear-gradient(rgba(0, 0, 0, 0.219), rgba(0,0,0,0.219)), url("images/background.jpg");
+        height: auto;    
+        background-size: cover;
+        background-attachment: fixed;
+    }
+    
+    
+    .navigation-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.7px 20px;
+        text-decoration: none;
+    }
+    
+    .nav-title {
+        display: inline-flex;
+        padding: 10px 20px;
+        margin-left: 50px;
+        list-style: none;
+    }
+    
+    .navigation-bar .nav-title li img{
+        margin-right: 20px;
+    }
+    
+    .navigation-bar .nav-title li a{
+        text-decoration: none;
+        font-size: 35px;
+        font-weight: bold;
+        color: white;
+    }
+    
+    .nav-links{
+        display: inline-flex;
+        padding: 10px 20px;
+        margin-right: 50px;
+        list-style: none;
+    }
+    
+    .navigation-bar .nav-links li {
+        padding: 5px 20px;
+    }
+    
+    .navigation-bar .nav-links li a{
+        padding: 5px 20px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 800;
+        color: white;
+    }
+    
+    .navigation-bar .nav-links li a:hover{
+        padding: 5px 20px;
+        text-decoration: none;
+        font-size: 18px;
+        font-weight: 800;
+        background: white;
+        color: rgb(4, 103, 184);
+    }
+    
+    .welcome-text {
+        margin-left: 20%;
+        margin-right: 20%;
+        margin-top: 10%;
+        text-align: center;
+    }
+    
+    .welcome-text h1{
+        color: white;
+        font-size: 75px;
+        font-weight: bold;
+    }
+    
+    .welcome-text p{
+        color: white;
+        padding: 10px 25px;
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    
+    .welcome-text .get-started{
+        margin-top: 2%;
+        padding: 15px;
+    }
+    
+    
+    .welcome-text .get-started a{
+        padding: 15px 25px;
+        border-radius: 30px;
+        background: rgb(4, 103, 184);
+        color: white;
+        font-size: 35px;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    
+    .get-started a:hover {
+        background: white;
+        color: rgb(4, 103, 184);
+    }
+    
+    .spacing{
+        margin: 25%;
+    }
+    
+    .text-wrapper{
+        margin-left: 10%;
+        margin-right: 10%;
+        padding: 25px;
+        background-color: rgba(3, 59, 104, 0.514);
+        text-align: center;
+        color: white;
+    }
+    
+    .text-wrapper .text-wrap{
+        padding: 12px;
+    }
+    
+    .text-wrapper .text-wrap h1{
+        padding: 12px;
+        font-size: 45px;
+        font-weight: bold;
+    }
+    
+    .text-wrapper .text-wrap p{
+        margin-left: 5%;
+        margin-right: 5%;
+        padding: 12px;
+        font-size: 18px;
+    }
+}
+
 
