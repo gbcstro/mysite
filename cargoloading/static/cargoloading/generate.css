@@ -241,7 +241,7 @@ input::-webkit-inner-spin-button {
     border: none;
     border-radius: 8px;
     border: 2px solid #1D84B5;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .csv-wrapper .button-wrapper button:hover{
@@ -250,7 +250,7 @@ input::-webkit-inner-spin-button {
     border: none;
     border-radius: 8px;
     border: 2px solid #1D84B5;
-    font-size: 18px;
+    font-size: 15px;
 }
 
 .sample-format{
