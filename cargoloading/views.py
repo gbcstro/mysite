@@ -1,7 +1,8 @@
 import csv, io
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
-from .forms import generateForm, uploadCSV, tableForm
+from .forms import generateForm, uploadCSV, cargoForm
+from .models import cargoList
 import numpy as np
 np.set_printoptions(suppress=True)
 
@@ -41,7 +42,6 @@ def generate(request):
     chargeable_weight.clear()
     value.clear()
     error_message = " "
-
     if request.method == 'POST':
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
@@ -51,6 +51,13 @@ def generate(request):
             request.session['cargo_type'] = request.POST['cargo_type']
             request.session['capacity'] = request.POST['capacity']
             request.session['ini_rate'] = request.POST['ini_rate']
+            boxes = form.cleaned_data['num_box']
+
+            box.clear()
+            for i in range(int(boxes)+1):
+                if i != 0:
+                    box.append(i)
+
             return redirect(table)
 
         if csvform.is_valid():
@@ -91,9 +98,16 @@ def generate(request):
                     weight.append(int(wght))
                     cbm.append(round(c))
 
-                box = len(cbm)
+                boxes = len(cbm)
+
+                #add box number
+                box.clear()
+                for i in range(int(boxes)+1):
+                    if i != 0:
+                        box.append(i)
+
                 #charge_list
-                for i in range(0,int(box)):
+                for i in range(0,int(boxes)):
                     if (weight[i] > cbm[i]):
                         chargeable_weight.append(weight[i])
                     elif (cbm[i] > weight[i]):
@@ -102,7 +116,7 @@ def generate(request):
                         chargeable_weight.append(weight[i])
 
                 #profi_list
-                for i in range(0,int(box)):
+                for i in range(0,int(boxes)):
                     profit = chargeable_weight[i] * int(rate)
                     value.append(round(float(profit)))
 
@@ -127,15 +141,15 @@ def generate(request):
 
 
 def table(request):
-    box = request.session.get('num_box')
+    boxes = request.session.get('num_box')
     type = request.session.get('cargo_type')
     capacity = request.session.get('capacity')
     rate = request.session.get('ini_rate')
 
-    tableFormSet = formset_factory(tableForm,extra=int(box)-1, min_num=1, validate_min=True)
+    cargoFormSet = formset_factory(cargoForm,extra=int(boxes)-1, min_num=1, validate_min=True)
 
     if request.method == 'POST':
-        formset = tableFormSet(request.POST)
+        formset = cargoFormSet(request.POST)
 
         if formset.is_valid():
             height.clear()
@@ -146,7 +160,7 @@ def table(request):
             cbm.clear()
             chargeable_weight.clear()
             value.clear()
-
+            
             for d in formset:
                 data = d.cleaned_data
                 desc = data.get('description')
@@ -167,10 +181,10 @@ def table(request):
                     cbm.append(round(c))
                 except:
                     description.clear
-                    formset = tableFormSet(request.POST)
+                    formset = cargoFormSet(request.POST)
 
             #charge_list
-            for i in range(0,int(box)):
+            for i in range(0,int(boxes)):
                 if (weight[i] > cbm[i]):
                     chargeable_weight.append(weight[i])
                 elif (cbm[i] > weight[i]):
@@ -179,9 +193,23 @@ def table(request):
                     chargeable_weight.append(weight[i])
 
             #profi_list
-            for i in range(0,int(box)):
+            for i in range(0,int(boxes)):
                 profit = chargeable_weight[i] * int(rate)
                 value.append(round(float(profit)))
+
+            table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
+            for b, d, h, l, wd, we, cb, chW, v in table_list:
+                _, create = cargoList.objects.update_or_create(
+                    box = b,
+                    description = d,
+                    height = h,
+                    length = l,
+                    width = wd,
+                    weight = we,
+                    cbm = cb,
+                    chargeable_weight = chW,
+                    profit = v,
+                )
 
             return redirect(result)
 
@@ -189,10 +217,10 @@ def table(request):
             print(formset.errors)
 
     else:
-        formset = tableFormSet()
+        formset = cargoFormSet()
 
     context = {
-        "box":box,
+        "box":boxes,
         "type":type,
         "capacity":capacity,
         "rate":rate,
@@ -202,14 +230,12 @@ def table(request):
     return render(request, 'table.html', context)
 
 def result(request):
-    capacity = request.session.get('capacity')
     boxes = len(cbm)
+    type = request.session.get('cargo_type')
+    rate = request.session.get('ini_rate')
+    capacity = request.session.get('capacity')
+    
     volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
-
-    box.clear()
-    for i in range(int(boxes)+1):
-        if i != 0:
-            box.append(i)
 
     if sum(weight) >= sum(cbm):
         dynamic_Prog_Weight(weight, value, int(capacity), int(boxes), int(volume), cbm)
@@ -249,6 +275,14 @@ def result(request):
         recommendation = "It is better to use big trucks in loading the remaining items"
 
     context = {
+        'boxes':boxes,
+        'type':type,
+        'capacity':capacity,
+        'rate':rate,
+        'bl':boxList,
+        'tl':table_list,
+        'dl':drop_list,
+        'fl':final_list,
         'total_cbm':total_cbm,
         'total_cost':total_cost,
         'total_weight':total_weight,
@@ -261,10 +295,6 @@ def result(request):
         'drop_weight':drop_weight,
         'drop_box':drop_box,
         'drop_cbm':drop_cbm,
-        'bl':boxList,
-        'tl':table_list,
-        'dl':drop_list,
-        'fl':final_list,
         'recom':recommendation,
     }
     return render(request, 'result.html', context)

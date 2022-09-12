@@ -1,4 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from cargoloading.models import Cargo, cargoList
 
+# Register your models here.
+admin.site.register(Cargo)
+admin.site.register(cargoList)
