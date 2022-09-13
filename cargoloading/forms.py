@@ -12,16 +12,14 @@ vehicles = [
 class generateForm(ModelForm):
     class Meta:
         model = Cargo
-        fields = ['num_box','cargo_type','capacity','ini_rate']
+        fields = ['num_box','capacity','ini_rate']
         widgets = {
             'num_box' : forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"10"}),
             'capacity' : forms.Select(choices=vehicles),
             'ini_rate' : forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"5","step":"0.01"}),
-            'cargo_type' : forms.TextInput(attrs={'type':'text','placeholder':'Type of goods'}), 
         }
     
 class uploadCSV(forms.Form):
-    cargo_type = forms.CharField(widget=forms.TextInput(attrs={'type':'text','placeholder':'Type of goods'}), max_length=120, required=True)
     capacity = forms.IntegerField(widget=forms.Select(choices=vehicles))
     ini_rate = forms.DecimalField(widget=forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"5","step":"0.01"}),)
     csvFile = forms.FileField(widget=forms.FileInput(attrs={'accept': ".csv"}))

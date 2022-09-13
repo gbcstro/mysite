@@ -702,6 +702,8 @@ input::-webkit-inner-spin-button {
 
     .sample-format img{
         padding: 12px;
+        height: 100%;
+        width: 100%;
     }
 
     .error-message{

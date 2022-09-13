@@ -2,70 +2,51 @@ import csv, io
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, cargoForm
-from .models import cargoList
+from .models import Cargo, cargoList
 import numpy as np
 np.set_printoptions(suppress=True)
 
 def index(request):
     return render(request, 'index.html', {})
 
-#Initial List
-description = []
-height = []
-length = []
-width = []
-weight = []
-cbm = []
-chargeable_weight = []
-value = []
-box = []
-
-#List of not included items
-xboxList = []
-xwghtList = []
-xcbmList = []
-xvalList = []
-
-#Final Optimal List
-boxList = []
-wghtList = []
-cbmList = []
-valList = []
-
-def generate(request):
-    height.clear()
-    description.clear()
-    length.clear()
-    width.clear()
-    weight.clear()
-    cbm.clear()
-    chargeable_weight.clear()
-    value.clear()
+def generate(request): 
     error_message = " "
+
     if request.method == 'POST':
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
         
         if form.is_valid():
             request.session['num_box'] = request.POST['num_box']
-            request.session['cargo_type'] = request.POST['cargo_type']
             request.session['capacity'] = request.POST['capacity']
             request.session['ini_rate'] = request.POST['ini_rate']
-            boxes = form.cleaned_data['num_box']
 
-            box.clear()
-            for i in range(int(boxes)+1):
-                if i != 0:
-                    box.append(i)
+            d = form.cleaned_data
+            boxes = d.get('num_box')
 
-            return redirect(table)
+            cargo = Cargo(
+                num_box = d.get('num_box'), 
+                capacity = d.get('capacity'),
+                ini_rate = d.get('ini_rate'),
+            )
+
+            cargo.save()
+            return redirect(table, pk=cargo.id)
 
         if csvform.is_valid():
+
+            #Initial List
+            box = []
+            description = []
+            height = []
+            length = []
+            width = []
+            weight = []
+            cbm = []
+            chargeable_weight = []
+            value = [] 
+
             rate = csvform.cleaned_data['ini_rate']
-    
-            request.session['cargo_type'] = request.POST['cargo_type']
-            request.session['capacity'] = request.POST['capacity']
-            request.session['ini_rate'] = request.POST['ini_rate']
 
             file = request.FILES['csvFile']
             data_set = file.read().decode('utf-8')
@@ -101,7 +82,6 @@ def generate(request):
                 boxes = len(cbm)
 
                 #add box number
-                box.clear()
                 for i in range(int(boxes)+1):
                     if i != 0:
                         box.append(i)
@@ -120,7 +100,32 @@ def generate(request):
                     profit = chargeable_weight[i] * int(rate)
                     value.append(round(float(profit)))
 
-                return redirect(result)
+                cargo = Cargo(
+                    num_box = boxes, 
+                    capacity = csvform.cleaned_data['capacity'],
+                    ini_rate = rate,
+                )
+
+                cargo.save()
+
+                print("TABLE LIST")
+
+                table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
+                for b, d, h, l, wd, we, cb, chW, v in table_list:
+                    _, create = cargoList.objects.update_or_create(
+                        cargo = Cargo.objects.get(id=cargo.id),
+                        box = b,
+                        description = d,
+                        height = h,
+                        length = l,
+                        width = wd,
+                        weight = we,
+                        cbm = cb,
+                        chargeable_weight = chW,
+                        profit = v,
+                    )
+
+                return redirect(result, pk=cargo.id)
 
             except:
                 form = generateForm(request.POST)
@@ -139,12 +144,22 @@ def generate(request):
 
     return render(request, 'generate.html', context)
 
+def table(request, pk):
+    cargo = Cargo.objects.get(id=pk)
+    boxes = int(cargo.num_box)
+    capacity = int(cargo.capacity)
+    rate = float(cargo.ini_rate)
 
-def table(request):
-    boxes = request.session.get('num_box')
-    type = request.session.get('cargo_type')
-    capacity = request.session.get('capacity')
-    rate = request.session.get('ini_rate')
+    #Initial List
+    box = []
+    description = []
+    height = []
+    length = []
+    width = []
+    weight = []
+    cbm = []
+    chargeable_weight = []
+    value = []
 
     cargoFormSet = formset_factory(cargoForm,extra=int(boxes)-1, min_num=1, validate_min=True)
 
@@ -152,15 +167,7 @@ def table(request):
         formset = cargoFormSet(request.POST)
 
         if formset.is_valid():
-            height.clear()
-            description.clear()
-            length.clear()
-            width.clear()
-            weight.clear()
-            cbm.clear()
-            chargeable_weight.clear()
-            value.clear()
-            
+
             for d in formset:
                 data = d.cleaned_data
                 desc = data.get('description')
@@ -183,6 +190,10 @@ def table(request):
                     description.clear
                     formset = cargoFormSet(request.POST)
 
+            for i in range(int(boxes)+1):
+                if i != 0:
+                    box.append(i)
+
             #charge_list
             for i in range(0,int(boxes)):
                 if (weight[i] > cbm[i]):
@@ -198,8 +209,10 @@ def table(request):
                 value.append(round(float(profit)))
 
             table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
+
             for b, d, h, l, wd, we, cb, chW, v in table_list:
                 _, create = cargoList.objects.update_or_create(
+                    cargo = Cargo.objects.get(id=pk),
                     box = b,
                     description = d,
                     height = h,
@@ -211,7 +224,7 @@ def table(request):
                     profit = v,
                 )
 
-            return redirect(result)
+            return redirect(result, pk=cargo.id)
 
         else:
             print(formset.errors)
@@ -221,7 +234,6 @@ def table(request):
 
     context = {
         "box":boxes,
-        "type":type,
         "capacity":capacity,
         "rate":rate,
         'formset':formset,
@@ -229,12 +241,49 @@ def table(request):
 
     return render(request, 'table.html', context)
 
-def result(request):
-    boxes = len(cbm)
-    type = request.session.get('cargo_type')
-    rate = request.session.get('ini_rate')
-    capacity = request.session.get('capacity')
-    
+#List of not included items
+xboxList = []
+xwghtList = []
+xcbmList = []
+xvalList = []
+
+#Final Optimal List
+boxList = []
+wghtList = []
+cbmList = []
+valList = []
+
+def result(request, pk):
+    cargo = Cargo.objects.get(id=pk)
+    boxes = int(cargo.num_box)
+    capacity = cargo.capacity
+    rate = float(cargo.ini_rate)
+
+    cargolist = cargoList.objects.filter(cargo=pk)
+
+    #Initial List
+    box = []
+    description = []
+    height = []
+    length = []
+    width = []
+    weight = []
+    cbm = []
+    chargeable_weight = []
+    value = []
+
+    for l in cargolist:
+        box.append(l.box)
+        description.append(l.description)
+        height.append(round(float(l.height)))
+        length.append(round(float(l.length)))
+        width.append(round(float(l.width)))
+        weight.append(round(float(l.weight)))
+        cbm.append(round(float(l.cbm)))
+        chargeable_weight.append(round(float(l.chargeable_weight)))
+        value.append(round(float(l.profit)))
+
+
     volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
 
     if sum(weight) >= sum(cbm):
