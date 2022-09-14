@@ -1,4 +1,5 @@
 import csv, io
+from .encrypt_util import *
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, cargoForm
@@ -9,7 +10,7 @@ np.set_printoptions(suppress=True)
 def index(request):
     return render(request, 'index.html', {})
 
-def generate(request): 
+def generate(request):
     error_message = " "
 
     if request.method == 'POST':
@@ -17,10 +18,6 @@ def generate(request):
         csvform = uploadCSV(request.POST, request.FILES)
         
         if form.is_valid():
-            request.session['num_box'] = request.POST['num_box']
-            request.session['capacity'] = request.POST['capacity']
-            request.session['ini_rate'] = request.POST['ini_rate']
-
             d = form.cleaned_data
             boxes = d.get('num_box')
 
@@ -31,7 +28,9 @@ def generate(request):
             )
 
             cargo.save()
-            return redirect(table, pk=cargo.id)
+
+            id = encrypt(cargo.id)
+            return redirect(table, pk=id)
 
         if csvform.is_valid():
 
@@ -45,30 +44,49 @@ def generate(request):
             cbm = []
             chargeable_weight = []
             value = [] 
-
+            i = 0
             rate = csvform.cleaned_data['ini_rate']
 
             file = request.FILES['csvFile']
             data_set = file.read().decode('utf-8')
             data = io.StringIO(data_set)
+
             try:
                 for c in csv.reader(data):
-                    if c[0].lower() == "description" and c[1].lower() == "height" and c[2].lower() == "length" and c[3].lower() == "width" and c[4].lower() == "weight":
-                        break
+                    if len(c) == 5:
+                        if c[0].lower() == "description" and c[1].lower() == "height" and c[2].lower() == "length" and c[3].lower() == "width" and c[4].lower() == "weight":
+                            break
+                        else:
+                            error_message = "Please follow the sample format!"
+                            raise ValueError
                     else:
+                        error_message = "Unnecessary field is detected!"
                         raise ValueError
 
                 for d in csv.reader(data):
+                    i = i + 1
+                    if i > 500:
+                        error_message = "You have exceed the limit of 500 items!"
+                        raise ValueError
+
+                    if len(d) != 5:
+                        error_message = "Unnecessary field is detected!"
+                        raise ValueError
+
                     description.append(d[0])
+                    if type(d[1]) == " " or d[2] == " " or d[3] == " " or d[4] == " ":
+                        error_message = "Missing data in required fields!"
+                        raise ValueError
 
-                    if d[1] == " " and d[2] == " " and d[3] == " " and d[4] == " ":
-                        raise TypeError
+                    try:
+                        h = float(d[1])
+                        l = float(d[2])
+                        wdth = float(d[3])
+                        wght = float(d[4])
+                    except:
+                        error_message = "Invalid data!"
+                        raise ValueError
 
-                    h = float(d[1])
-                    l = float(d[2])
-                    wdth = float(d[3])
-                    wght = float(d[4])
-                    
                     hl = h * l #height_length
                     prod = (hl * wdth) / 1000000 #prod
                     c = prod * 333 #cbm_charge
@@ -79,6 +97,7 @@ def generate(request):
                     weight.append(int(wght))
                     cbm.append(round(c))
 
+                print(i)
                 boxes = len(cbm)
 
                 #add box number
@@ -107,8 +126,7 @@ def generate(request):
                 )
 
                 cargo.save()
-
-                print("TABLE LIST")
+                id = encrypt(cargo.id)
 
                 table_list = zip(box,description,height,length,width,weight,cbm,chargeable_weight,value)
                 for b, d, h, l, wd, we, cb, chW, v in table_list:
@@ -125,13 +143,12 @@ def generate(request):
                         profit = v,
                     )
 
-                return redirect(result, pk=cargo.id)
+                return redirect(result, pk=id)
 
             except:
                 form = generateForm(request.POST)
                 csvform = uploadCSV(request.POST, request.FILES)
-                error_message = "There is a invalid or missing data in the required parameters of the CSV file!"
-
+                
     else:
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
@@ -145,7 +162,8 @@ def generate(request):
     return render(request, 'generate.html', context)
 
 def table(request, pk):
-    cargo = Cargo.objects.get(id=pk)
+    id = decrypt(pk)
+    cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = int(cargo.capacity)
     rate = float(cargo.ini_rate)
@@ -212,7 +230,7 @@ def table(request, pk):
 
             for b, d, h, l, wd, we, cb, chW, v in table_list:
                 _, create = cargoList.objects.update_or_create(
-                    cargo = Cargo.objects.get(id=pk),
+                    cargo = Cargo.objects.get(id=id),
                     box = b,
                     description = d,
                     height = h,
@@ -224,7 +242,9 @@ def table(request, pk):
                     profit = v,
                 )
 
-            return redirect(result, pk=cargo.id)
+            id = encrypt(id)
+
+            return redirect(result, pk=id)
 
         else:
             print(formset.errors)
@@ -254,12 +274,13 @@ cbmList = []
 valList = []
 
 def result(request, pk):
-    cargo = Cargo.objects.get(id=pk)
+    id = decrypt(pk)
+    cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = cargo.capacity
     rate = float(cargo.ini_rate)
-
-    cargolist = cargoList.objects.filter(cargo=pk)
+    
+    cargolist = cargoList.objects.filter(cargo=id)
 
     #Initial List
     box = []
@@ -325,7 +346,6 @@ def result(request, pk):
 
     context = {
         'boxes':boxes,
-        'type':type,
         'capacity':capacity,
         'rate':rate,
         'bl':boxList,

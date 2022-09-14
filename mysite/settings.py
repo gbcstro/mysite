@@ -13,8 +13,6 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 import os
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,6 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-p&=(&(^pot0i9ommin-=$-be@j8y__9#yyp!@=mwt^4l9of1un'
+ENCRYPT_KEY = b'Zq3QAxjGhHwlxEvlpeDLpK3bkGFajBoCAHuUyWqmCV8='
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

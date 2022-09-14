@@ -20,6 +20,6 @@ from . import views
 urlpatterns = [
     path('', views.index, name = 'index'),
     path('generate/', views.generate, name = 'generate'),
-    path('table/id=<int:pk>/', views.table, name = 'table'),
-    path('result/id=<int:pk>/', views.result, name = 'result'),
+    path('table/<str:pk>/', views.table, name = 'table'),
+    path('result/<str:pk>/', views.result, name = 'result'),
 ]

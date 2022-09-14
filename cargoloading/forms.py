@@ -14,7 +14,7 @@ class generateForm(ModelForm):
         model = Cargo
         fields = ['num_box','capacity','ini_rate']
         widgets = {
-            'num_box' : forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"10"}),
+            'num_box' : forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"10","max":"500"}),
             'capacity' : forms.Select(choices=vehicles),
             'ini_rate' : forms.TextInput(attrs={'min':'0','type':'number',"placeholder":"5","step":"0.01"}),
         }
