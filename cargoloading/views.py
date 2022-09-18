@@ -1,4 +1,5 @@
 import csv, io
+from datetime import datetime, timezone, timedelta
 from .encrypt_util import *
 from django.shortcuts import render, redirect
 from django.forms import formset_factory
@@ -8,6 +9,14 @@ import numpy as np
 np.set_printoptions(suppress=True)
 
 def index(request):
+    x = datetime.utcnow()
+    print("Time now:",x)
+    cargo = Cargo.objects.filter(creation_time__lte=datetime.utcnow()-timedelta(minutes=30))
+    for i in cargo:
+        print(i.creation_time,"is deleted!")
+        i.delete()
+        cl = cargoList.objects.filter(cargo=i.id)
+        cl.delete()
     return render(request, 'index.html', {})
 
 def generate(request):
@@ -96,8 +105,7 @@ def generate(request):
                     width.append(round(wdth))
                     weight.append(int(wght))
                     cbm.append(round(c))
-
-                print(i)
+                    
                 boxes = len(cbm)
 
                 #add box number

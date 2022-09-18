@@ -268,6 +268,20 @@ input::-webkit-inner-spin-button {
     height: 85px;
 }
 
+.sample-format button{
+    background-color: #1D84B5;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #1D84B5;
+    font-size: 15px;
+}
+
+.sample-format button a {
+    text-decoration: none;
+    color: white;
+}
+
 .error-message{
     text-align: center;
     padding: 8px;
