@@ -22,4 +22,6 @@ urlpatterns = [
     path('generate/', views.generate, name = 'generate'),
     path('table/<str:pk>/', views.table, name = 'table'),
     path('result/<str:pk>/', views.result, name = 'result'),
+    path('op_csv', views.op_csv, name = 'optimal'),
+    path('dp_csv', views.dp_csv, name = 'drop'),
 ]

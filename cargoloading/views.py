@@ -2,6 +2,7 @@ import csv, io
 from datetime import datetime, timezone, timedelta
 from .encrypt_util import *
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, cargoForm
 from .models import Cargo, cargoList
@@ -361,32 +362,12 @@ def result(request, pk):
     final_box = len(boxList)
     final_cbm = sum(cbmList)
 
-
-    with open('cargoloading\media\optimal.csv', 'w', encoding='UTF8', newline='') as f:
-        f.truncate()
-        write = csv.writer(f)
-        header = ['Box No.','Weight','Volume','Profit']
-        ls = zip(boxList, wghtList, cbmList, valList)
-        write.writerow(header)
-        for b, w, c, v in ls:
-            write.writerow((b,w,c,v))
-
     drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
     #Summary of drop list
     drop_cost = sum(xvalList)
     drop_weight = sum(xwghtList)
     drop_box = len(xboxList)
     drop_cbm = sum(xcbmList)
-
-    with open('cargoloading\media\droplist.csv', 'w', encoding='UTF8', newline='') as d:
-        d.truncate()
-        write = csv.writer(d)
-        header = ['Box No.','Weight','Volume','Profit']
-        ls = zip(xboxList, xwghtList, xcbmList, xvalList)
-        if len(xboxList) != 0:
-            write.writerow(header)
-            for b, w, c, v in ls:
-                write.writerow((b,w,c,v))
 
     if drop_weight == 0 and drop_cbm == 0:
         recommendation = "No recommendations needed."
@@ -422,6 +403,36 @@ def result(request, pk):
         'recom':recommendation,
     }
     return render(request, 'result.html', context)
+
+def op_csv(request):
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    ls = zip(boxList, wghtList, cbmList, valList)
+    write.writerow(header)
+    for b, w, c, v in ls:
+        write.writerow((b,w,c,v))
+
+    return response
+
+def dp_csv(request):
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    ls = zip(xboxList, xwghtList, xcbmList, xvalList)
+    write.writerow(header)
+    for b, w, c, v in ls:
+        write.writerow((b,w,c,v))
+
+    return response
 
 # Function for Dynamic Programming
 # dynamic_Prog(weight, value, vehicle_capacity, num_box, vehicle_volume, cbm)
@@ -679,3 +690,5 @@ def dynamic_Prog_Volume(W, V, M, n, C, Z):
 
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
+
+        
