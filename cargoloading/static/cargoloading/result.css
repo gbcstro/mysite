@@ -208,6 +208,27 @@
     background-color: #D8D2CB;
 }
 
+.table-wrapper .b-wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+.table-wrapper .b-wrap button{
+    background-color: #09b903;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #09b903;
+    font-size: 15px;
+}
+
+.table-wrapper .b-wrap button a{
+    text-decoration: none;
+    color: white;
+}
+
 .total-list{
     display: flex;
     justify-content: space-between;
@@ -235,6 +256,7 @@
 .recom{
     margin-left: 15%;
     margin-right: 15%;
+    margin-top: 15px;
     padding: 5px;
     background-color: #132E32;
     border-radius: 8px;

@@ -22,6 +22,15 @@ def index(request):
 def generate(request):
     error_message = " "
 
+    x = datetime.utcnow()
+    print("Time now:",x)
+    cargo = Cargo.objects.filter(creation_time__lte=datetime.utcnow()-timedelta(minutes=30))
+    for i in cargo:
+        print(i.creation_time,"is deleted!")
+        i.delete()
+        cl = cargoList.objects.filter(cargo=i.id)
+        cl.delete()
+
     if request.method == 'POST':
         form = generateForm(request.POST)
         csvform = uploadCSV(request.POST, request.FILES)
@@ -170,12 +179,21 @@ def generate(request):
     return render(request, 'generate.html', context)
 
 def table(request, pk):
+    x = datetime.utcnow()
+    print("Time now:",x)
+    cargo = Cargo.objects.filter(creation_time__lte=datetime.utcnow()-timedelta(minutes=30))
+    for i in cargo:
+        print(i.creation_time,"is deleted!")
+        i.delete()
+        cl = cargoList.objects.filter(cargo=i.id)
+        cl.delete()
+
     id = decrypt(pk)
     cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = int(cargo.capacity)
     rate = float(cargo.ini_rate)
-
+    
     #Initial List
     box = []
     description = []
@@ -282,6 +300,15 @@ cbmList = []
 valList = []
 
 def result(request, pk):
+    x = datetime.utcnow()
+    print("Time now:",x)
+    cargo = Cargo.objects.filter(creation_time__lte=datetime.utcnow()-timedelta(minutes=30))
+    for i in cargo:
+        print(i.creation_time,"is deleted!")
+        i.delete()
+        cl = cargoList.objects.filter(cargo=i.id)
+        cl.delete()
+
     id = decrypt(pk)
     cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
@@ -334,12 +361,32 @@ def result(request, pk):
     final_box = len(boxList)
     final_cbm = sum(cbmList)
 
+
+    with open('cargoloading\static\cargoloading\sample\optimal.csv', 'w', encoding='UTF8', newline='') as f:
+        f.truncate()
+        write = csv.writer(f)
+        header = ['Box No.','Weight','Volume','Profit']
+        ls = zip(boxList, wghtList, cbmList, valList)
+        write.writerow(header)
+        for b, w, c, v in ls:
+            write.writerow((b,w,c,v))
+
     drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
     #Summary of drop list
     drop_cost = sum(xvalList)
     drop_weight = sum(xwghtList)
     drop_box = len(xboxList)
     drop_cbm = sum(xcbmList)
+
+    with open('cargoloading\static\cargoloading\sample\droplist.csv', 'w', encoding='UTF8', newline='') as d:
+        d.truncate()
+        write = csv.writer(d)
+        header = ['Box No.','Weight','Volume','Profit']
+        ls = zip(xboxList, xwghtList, xcbmList, xvalList)
+        if len(xboxList) != 0:
+            write.writerow(header)
+            for b, w, c, v in ls:
+                write.writerow((b,w,c,v))
 
     if drop_weight == 0 and drop_cbm == 0:
         recommendation = "No recommendations needed."
