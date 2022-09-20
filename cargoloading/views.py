@@ -362,7 +362,7 @@ def result(request, pk):
     final_cbm = sum(cbmList)
 
 
-    with open('cargoloading\static\cargoloading\sample\optimal.csv', 'w', encoding='UTF8', newline='') as f:
+    with open('cargoloading\media\optimal.csv', 'w', encoding='UTF8', newline='') as f:
         f.truncate()
         write = csv.writer(f)
         header = ['Box No.','Weight','Volume','Profit']
@@ -378,7 +378,7 @@ def result(request, pk):
     drop_box = len(xboxList)
     drop_cbm = sum(xcbmList)
 
-    with open('cargoloading\static\cargoloading\sample\droplist.csv', 'w', encoding='UTF8', newline='') as d:
+    with open('cargoloading\media\droplist.csv', 'w', encoding='UTF8', newline='') as d:
         d.truncate()
         write = csv.writer(d)
         header = ['Box No.','Weight','Volume','Profit']
