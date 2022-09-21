@@ -404,36 +404,6 @@ def result(request, pk):
     }
     return render(request, 'result.html', context)
 
-def op_csv(request):
-    response = HttpResponse(
-            content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
-    )
-
-    write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    ly = zip(boxList, wghtList, cbmList, valList)
-    write.writerow(header)
-    for b, w, c, v in ly:
-        write.writerow((b,w,c,v))
-
-    return response
-
-def dp_csv(request):
-    response = HttpResponse(
-            content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
-    )
-
-    write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
-    write.writerow(header)
-    for b, w, c, v in lz:
-        write.writerow((b,w,c,v))
-
-    return response
-
 # Function for Dynamic Programming
 # dynamic_Prog(weight, value, vehicle_capacity, num_box, vehicle_volume, cbm)
 def dynamic_Prog_Weight(W, V, M, n, C, Z):
@@ -691,4 +661,32 @@ def dynamic_Prog_Volume(W, V, M, n, C, Z):
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
 
-        
+def op_csv(request):
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    ly = zip(boxList, wghtList, cbmList, valList)
+    write.writerow(header)
+    for b, w, c, v in ly:
+        write.writerow((b,w,c,v))
+
+    return response
+
+def dp_csv(request):
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
+    write.writerow(header)
+    for b, w, c, v in lz:
+        write.writerow((b,w,c,v))
+
+    return response
