@@ -412,9 +412,9 @@ def op_csv(request):
 
     write = csv.writer(response)
     header = ['Box No.','Weight','Volume','Profit']
-    ls = zip(boxList, wghtList, cbmList, valList)
+    ly = zip(boxList, wghtList, cbmList, valList)
     write.writerow(header)
-    for b, w, c, v in ls:
+    for b, w, c, v in ly:
         write.writerow((b,w,c,v))
 
     return response
@@ -427,9 +427,9 @@ def dp_csv(request):
 
     write = csv.writer(response)
     header = ['Box No.','Weight','Volume','Profit']
-    ls = zip(xboxList, xwghtList, xcbmList, xvalList)
+    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
     write.writerow(header)
-    for b, w, c, v in ls:
+    for b, w, c, v in lz:
         write.writerow((b,w,c,v))
 
     return response
