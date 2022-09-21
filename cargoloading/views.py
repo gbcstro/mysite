@@ -1,7 +1,8 @@
 import csv, io
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 from .encrypt_util import *
 from django.shortcuts import render, redirect
+from django.conf import settings
 from django.http import HttpResponse
 from django.forms import formset_factory
 from .forms import generateForm, uploadCSV, cargoForm
@@ -193,7 +194,7 @@ def table(request, pk):
     cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = int(cargo.capacity)
-    rate = float(cargo.ini_rate)
+    rate = round(float(cargo.ini_rate))
     
     #Initial List
     box = []
@@ -379,11 +380,14 @@ def result(request, pk):
         recommendation = "The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume."
     else:
         recommendation = "It is better to use big trucks in loading the remaining items"
-
+    
+    id = encrypt(id)
+    
     context = {
         'boxes':boxes,
         'capacity':capacity,
         'rate':rate,
+        'pk':id,
         'bl':boxList,
         'tl':table_list,
         'dl':drop_list,
@@ -402,7 +406,112 @@ def result(request, pk):
         'drop_cbm':drop_cbm,
         'recom':recommendation,
     }
+
     return render(request, 'result.html', context)
+
+def op_csv(request, pk):
+    id = decrypt(pk)
+    cargo = Cargo.objects.get(id=id)
+    boxes = int(cargo.num_box)
+    capacity = cargo.capacity
+
+    cargolist = cargoList.objects.filter(cargo=id)
+
+    #Initial List
+    box = []
+    description = []
+    height = []
+    length = []
+    width = []
+    weight = []
+    cbm = []
+    chargeable_weight = []
+    value = []
+
+    for l in cargolist:
+        box.append(l.box)
+        description.append(l.description)
+        height.append(round(float(l.height)))
+        length.append(round(float(l.length)))
+        width.append(round(float(l.width)))
+        weight.append(round(float(l.weight)))
+        cbm.append(round(float(l.cbm)))
+        chargeable_weight.append(round(float(l.chargeable_weight)))
+        value.append(round(float(l.profit)))
+
+
+    volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
+
+    if sum(weight) >= sum(cbm):
+        dynamic_Prog_Weight(weight, value, int(capacity), int(boxes), int(volume), cbm)
+    elif sum(weight) < sum(cbm):
+        dynamic_Prog_Volume(weight, value, int(capacity), int(boxes), int(volume), cbm)
+
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    ly = zip(boxList, wghtList, cbmList, valList)
+    write.writerow(header)
+    for b, w, c, v in ly:
+        write.writerow((b,w,c,v))
+
+    return response
+
+def dp_csv(request,pk):
+    id = decrypt(pk)
+    cargo = Cargo.objects.get(id=id)
+    boxes = int(cargo.num_box)
+    capacity = cargo.capacity
+
+    cargolist = cargoList.objects.filter(cargo=id)
+
+    #Initial List
+    box = []
+    description = []
+    height = []
+    length = []
+    width = []
+    weight = []
+    cbm = []
+    chargeable_weight = []
+    value = []
+
+    for l in cargolist:
+        box.append(l.box)
+        description.append(l.description)
+        height.append(round(float(l.height)))
+        length.append(round(float(l.length)))
+        width.append(round(float(l.width)))
+        weight.append(round(float(l.weight)))
+        cbm.append(round(float(l.cbm)))
+        chargeable_weight.append(round(float(l.chargeable_weight)))
+        value.append(round(float(l.profit)))
+
+
+    volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
+
+    if sum(weight) >= sum(cbm):
+        dynamic_Prog_Weight(weight, value, int(capacity), int(boxes), int(volume), cbm)
+    elif sum(weight) < sum(cbm):
+        dynamic_Prog_Volume(weight, value, int(capacity), int(boxes), int(volume), cbm)
+
+    response = HttpResponse(
+            content_type='text/csv',
+            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
+    )
+
+    write = csv.writer(response)
+    header = ['Box No.','Weight','Volume','Profit']
+    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
+    write.writerow(header)
+    for b, w, c, v in lz:
+        write.writerow((b,w,c,v))
+
+    return response
 
 # Function for Dynamic Programming
 # dynamic_Prog(weight, value, vehicle_capacity, num_box, vehicle_volume, cbm)
@@ -661,32 +770,3 @@ def dynamic_Prog_Volume(W, V, M, n, C, Z):
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
 
-def op_csv(request):
-    response = HttpResponse(
-            content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
-    )
-
-    write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    ly = zip(boxList, wghtList, cbmList, valList)
-    write.writerow(header)
-    for b, w, c, v in ly:
-        write.writerow((b,w,c,v))
-
-    return response
-
-def dp_csv(request):
-    response = HttpResponse(
-            content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
-    )
-
-    write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
-    write.writerow(header)
-    for b, w, c, v in lz:
-        write.writerow((b,w,c,v))
-
-    return response
