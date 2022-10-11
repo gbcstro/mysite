@@ -87,6 +87,15 @@ def generate(request):
                     i = i + 1
                     if i > 500:
                         error_message = "You have exceed the limit of 500 items!"
+                        box = []
+                        description = []
+                        height = []
+                        length = []
+                        width = []
+                        weight = []
+                        cbm = []
+                        chargeable_weight = []
+                        value = [] 
                         raise ValueError
 
                     if len(d) != 5:
@@ -109,13 +118,13 @@ def generate(request):
 
                     hl = h * l #height_length
                     prod = (hl * wdth) / 1000000 #prod
-                    c = prod * 333 #cbm_charge
+                    c = float(prod) * 333 #cbm_charge
 
-                    height.append(round(h))
-                    length.append(round(l))
-                    width.append(round(wdth))
+                    height.append(int(h))
+                    length.append(int(l))
+                    width.append(int(wdth))
                     weight.append(int(wght))
-                    cbm.append(round(c))
+                    cbm.append(int(c))
                     
                 boxes = len(cbm)
 
@@ -136,7 +145,7 @@ def generate(request):
                 #profi_list
                 for i in range(0,int(boxes)):
                     profit = chargeable_weight[i] * int(rate)
-                    value.append(round(float(profit)))
+                    value.append(int(profit))
 
                 cargo = Cargo(
                     num_box = boxes, 
@@ -191,10 +200,14 @@ def table(request, pk):
         cl.delete()
 
     id = decrypt(pk)
-    cargo = Cargo.objects.get(id=id)
+    try: 
+        cargo = Cargo.objects.get(id=id)
+    except:
+        return redirect(index)
+
     boxes = int(cargo.num_box)
     capacity = int(cargo.capacity)
-    rate = round(float(cargo.ini_rate))
+    rate = float(cargo.ini_rate)
     
     #Initial List
     box = []
@@ -226,12 +239,12 @@ def table(request, pk):
                 c = prod * 333 #cbm_charge
 
                 try:
-                    height.append(round(float(h)))
+                    height.append(int(h))
                     description.append(desc)
-                    length.append(round(float(l)))
-                    width.append(round(float(wdth)))
+                    length.append(int(l))
+                    width.append(int(wdth))
                     weight.append(int(wght))
-                    cbm.append(round(c))
+                    cbm.append(int(c))
                 except:
                     description.clear
                     formset = cargoFormSet(request.POST)
@@ -312,7 +325,11 @@ def result(request, pk):
         cl.delete()
 
     id = decrypt(pk)
-    cargo = Cargo.objects.get(id=id)
+    try: 
+        cargo = Cargo.objects.get(id=id)
+    except:
+        return redirect(index)
+
     boxes = int(cargo.num_box)
     capacity = cargo.capacity
     rate = float(cargo.ini_rate)
