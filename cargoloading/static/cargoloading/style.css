@@ -8,7 +8,7 @@
 }
 
 .bg{
-    background-image: linear-gradient(rgba(54, 5, 5, 0.151), rgba(0,0,0,0.219)), url("images/background.jpg");
+    background-image: linear-gradient(rgba(0, 0, 0, 0.726), rgba(0, 0, 0, 0.438)), url("images/background.jpg");
     height: auto;    
     width: auto;
     background-size: cover;
@@ -77,13 +77,14 @@
 .welcome-text h1{
     color: white;
     font-size: 45px;
-    font-weight: bold;
+    font-weight: 800;
 }
 
 .welcome-text p{
     color: white;
     padding: 10px 25px;
     font-size: 17px;
+    font-weight: 700;
     margin-top: 10px;
 }
 
@@ -128,19 +129,20 @@
 .text-wrapper .text-wrap h1{
     padding: 12px;
     font-size: 30px;
-    font-weight: bold;
+    font-weight: 700;
 }
 
 .text-wrapper .text-wrap p{
     margin-left: 5%;
     margin-right: 5%;
     padding: 12px;
-    font-size: 12px;
+    font-size: 14px;
+    font-weight: 650;
 }
 
 @media only screen and (min-width: 768px){
     .bg{
-        background-image: linear-gradient(rgba(0, 0, 0, 0.219), rgba(0,0,0,0.219)), url("images/background.jpg");
+        background-image: linear-gradient(rgba(0, 0, 0, 0.726), rgba(0, 0, 0, 0.438)), url("images/background.jpg");
         height: auto;    
         background-size: cover;
         background-attachment: fixed;

@@ -4,9 +4,9 @@ from .models import Cargo, cargoList
 
 
 vehicles = [
-        (600,'MPV (600 kg)'),
-        (1000,'Small truck (1000 kg)'),
-        (2000,'Large truck (2000 kg)'),
+        (600,'Light Van (600 kg)'),
+        (1000,'L300/Van (1000 kg)'),
+        (2000,'Closed Van (2000 kg)'),
     ]
 
 class generateForm(ModelForm):

@@ -7,15 +7,39 @@
 {% endblock %}
 
 {% block content %}
-<div class="back">
-    <i class="fa fa-arrow-left" onclick="history.back(-1)"></i>
-</div>
-
 <div class="wrapper">
-    <div class="title-text">
-        <h1>LIST OF ITEMS</h1>
+    <div class="back">
+        <i class="fa fa-arrow-left" onclick="history.back(-1)"></i>
     </div>
-    
+
+    <div class="title-text">
+        <h1>SUMMARY</h1>
+        <div class="dialog-buttons">
+            <button id="oplist">Optimal List</button>
+            <button id="dislist" class="dcl">Discarded List</button>
+        </div>
+    </div>
+    <h2>LIST OF ITEMS</h2>
+
+    <div class="total-list">
+        <div class="text-wrap">
+            <h2>Num. of boxes:</h2>
+            <p>{{total_box}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total Weight:</h2>
+            <p>{{total_weight}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total Profit:</h2>
+            <p>{{total_cost}}</p>
+        </div>
+        <div class="text-wrap">
+            <h2>Total Volume:</h2>
+            <p>{{total_cbm}}</p>
+        </div>
+    </div>
+
     <div class="list-wrapper">
         <table>
             <thead>
@@ -53,137 +77,138 @@
         </table>
     </div>
 
-    <div class="total-list">
-        <div class="text-wrap">
-            <h2>Num. of boxes:</h2>
-            <p>{{total_box}}</p>
-        </div>
-        <div class="text-wrap">
-            <h2>Total Weight:</h2>
-            <p>{{total_weight}}</p>
-        </div>
-        <div class="text-wrap">
-            <h2>Total Profit:</h2>
-            <p>{{total_cost}}</p>
-        </div>
-        <div class="text-wrap">
-            <h2>Total Volume:</h2>
-            <p>{{total_cbm}}</p>
+    <div id="optModal" class="op-modal">
+        <div class="modal-wrapper">
+            <i id="close" class="fa fa-times-circle"></i>
+            {% if final_box %}
+                <div class="t-wrap">
+                    <h1>OPTIMAL LIST</h1>
+                </div>
+
+                <div class="total-list">
+                    <div class="text-wrap">
+                        <h2>No. of boxes:</h2>
+                        <p>{{final_box}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Weight:</h2>
+                        <p>{{final_weight}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Profit:</h2>
+                        <p>{{final_cost}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Volume:</h2>
+                        <p>{{final_cbm}}</p>
+                    </div>
+                </div>
+
+                <div class="b-wrap">
+                    <button><a href="/op_csv/{{pk}}" download>Download Optimal List</a></button>
+                </div>
+
+                <div class="table-wrapper">     
+                    <table>
+                        <thead>
+                            <th>Box No.</th>
+                            <th>Description</th>
+                            <th>Weight (kg)</th>
+                            <th>Volume (kg)</th>
+                            <th>Profit</th>
+                            <th class="os">Optimal Solution</th>
+                        </thead>
+                        <tbody>
+                            {% for bl, d, w, v, cbm in fl %}
+                                <tr>
+                                    <td>{{bl}}</td>
+                                    <td>{{d}}</td>
+                                    <td>{{w}}</td>
+                                    <td>{{cbm}}</td>
+                                    <td>{{v}}</td>
+                                    <td class="op">1</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="error-wrap">
+                    <h1>DISCARD LIST IS EMPTY</h1>
+                </div>
+            {% endif %}
+            
         </div>
     </div>
-
-    <div class="title-text">
-        <h1>SUMMARY</h1>
-    </div>
-
-    <div class="table-wrapper">
-        {% if final_box %}
-            <div class="text-wrap">
-                <h2>OPTIMAL LIST</h2>
-            </div>
-            
-            <table>
-                <thead>
-                    <th>Box No.</th>
-                    <th>Weight (kg)</th>
-                    <th>Volume (kg)</th>
-                    <th>Profit</th>
-                    <th class="os">Optimal Solution</th>
-                </thead>
-                <tbody>
-                    {% for bl, w, v, cbm in fl %}
-                        <tr>
-                            <td>{{bl}}</td>
-                            <td>{{w}}</td>
-                            <td>{{cbm}}</td>
-                            <td>{{v}}</td>
-                            <td class="op">1</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div class="total-list">
-                <div class="text-wrap">
-                    <h2>Num. of boxes:</h2>
-                    <p>{{final_box}}</p>
+    
+    <div id="disModal" class="dis-modal">
+        <div class="modal-wrapper">
+            <i id="exit" class="fa fa-times-circle"></i>
+            {% if drop_box %}
+                <div class="t-wrap">
+                    <h1>ITEMS NOT INCLUDED IN OPTIMAL LIST</h1>
                 </div>
-                <div class="text-wrap">
-                    <h2>Total Weight:</h2>
-                    <p>{{final_weight}}</p>
+
+                <div class="total-list">
+                    <div class="text-wrap">
+                        <h2>No. of boxes:</h2>
+                        <p>{{drop_box}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Weight:</h2>
+                        <p>{{drop_weight}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Profit:</h2>
+                        <p>{{drop_cost}}</p>
+                    </div>
+                    <div class="text-wrap">
+                        <h2>Total Volume:</h2>
+                        <p>{{drop_cbm}}</p>
+                    </div>
                 </div>
-                <div class="text-wrap">
-                    <h2>Total Profit:</h2>
-                    <p>{{final_cost}}</p>
+
+                <div class="b-wrap">
+                    <button><a href="/dp_csv/{{pk}}" download>Download Discarded List</a></button>
                 </div>
-                <div class="text-wrap">
-                    <h2>Total Volume:</h2>
-                    <p>{{final_cbm}}</p>
+                
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <th>Box No.</th>
+                            <th>Description</th>
+                            <th>Weight (kg)</th>
+                            <th>Height (cm)</th>
+                            <th>Length (cm)</th>
+                            <th>Width (cm)</th>
+                            <th>Volume (kg)</th>
+                            <th>Profit</th>
+                            <th class="os">Optimal Solution</th>
+                        </thead>
+                        <tbody>
+                            {% for b, d, wg, h, l, wd, vol, p in dl %}
+                                <tr>
+                                    <td>{{b}}</td>
+                                    <td>{{d}}</td>
+                                    <td>{{wg}}</td>
+                                    <td>{{h}}</td>
+                                    <td>{{l}}</td>
+                                    <td>{{wd}}</td>
+                                    <td>{{vol}}</td>
+                                    <td>{{p}}</td>
+                                    <td class="nop">0</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-
-            <div class="b-wrap">
-                <button><a href="/op_csv/{{pk}}" download>Download Optimal List</a></button>
-            </div>
-
-        {% endif %}
-
-        {% if drop_box %}
-            <div class="text-wrap">
-                <h2>ITEMS NOT INCLUDED IN OPTIMAL LIST</h2>
-            </div>
-            
-            <table>
-                <thead>
-                    <th>Box No.</th>
-                    <th>Weight (kg)</th>
-                    <th>Volume (kg)</th>
-                    <th>Profit</th>
-                    <th class="os">Optimal Solution</th>
-                </thead>
-                <tbody>
-                    {% for bl, w, v, cbm in dl %}
-                        <tr>
-                            <td>{{bl}}</td>
-                            <td>{{w}}</td>
-                            <td>{{cbm}}</td>
-                            <td>{{v}}</td>
-                            <td class="nop">0</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <div class="total-list">
-                <div class="text-wrap">
-                    <h2>Num. of boxes:</h2>
-                    <p>{{drop_box}}</p>
+                    
+            {% else %}
+                <div class="error-wrap">
+                    <h1>DISCARD LIST IS EMPTY</h1>
                 </div>
-                <div class="text-wrap">
-                    <h2>Total Weight:</h2>
-                    <p>{{drop_weight}}</p>
-                </div>
-                <div class="text-wrap">
-                    <h2>Total Profit:</h2>
-                    <p>{{drop_cost}}</p>
-                </div>
-                <div class="text-wrap">
-                    <h2>Total Volume:</h2>
-                    <p>{{drop_cbm}}</p>
-                </div>
-            </div>
-
-            <div class="b-wrap">
-                <button><a href="/dp_csv/{{pk}}" download>Download Drop List</a></button>
-            </div>
-
-            <div class="recom">
-                <h2>Recommendation:</h2>
-                <p>{{recom}}</p>
-            </div>
-
-        {% endif %}
-
+            {% endif %}
+        </div>
     </div>
 
     <div class="button-wrapper">
@@ -210,26 +235,52 @@
 <script>
 // Get the modal
 var modal = document.getElementById("myModal");
+var optModal = document.getElementById("optModal");
+var disModal = document.getElementById("disModal");
 
 // Get the button that opens the modal
 var btn = document.getElementById("myBtn");
+var opt = document.getElementById("oplist");
+var disc = document.getElementById("dislist");
 
 // Get the <span> element that closes the modal
 var e = document.getElementById("close");
+var x = document.getElementById("exit");
 
 // When the user clicks on the button, open the modal
 btn.onclick = function() {
   modal.style.display = "block";
 }
 
+opt.onclick = function() {
+  optModal.style.display = "block";
+}
+
+disc.onclick = function() {
+  disModal.style.display = "block";
+}
+
 e.onclick = function() {
   modal.style.display = "none";
+  optModal.style.display = "none";
+  disModal.style.display = "none";
 }
+
+x.onclick = function() {
+  disModal.style.display = "none";
+}
+
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
+  }
+  if (event.target == optModal) {
+    optModal.style.display = "none";
+  }
+  if (event.target == disModal) {
+    disModal.style.display = "none";
   }
 }
 </script>

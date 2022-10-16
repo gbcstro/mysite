@@ -66,7 +66,6 @@
 /* RESULTS */
 .back{
     float: left;
-    margin: 15px;
     font-size: 34px;
     color:#0A2239
 }
@@ -84,7 +83,44 @@
 .wrapper .title-text{
     padding: 5px;
     text-align: center;
-    font-size: 18px;
+    color: #052d53;
+}
+
+.wrapper .title-text .dialog-buttons{
+    padding: 5px;
+}
+
+.wrapper .title-text .dialog-buttons button{
+    background-color: #0A2239;
+    color: #fff;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 15px;
+}
+
+.wrapper .title-text .dialog-buttons button:hover{
+    background-color: white;
+    color: #0A2239;
+    border: 2px solid #0A2239;
+}
+
+.wrapper .title-text .dialog-buttons .dcl{
+    border: 2px solid #0A2239;
+    background-color: #D8D2CB;
+    color: #0A2239;
+    padding: 5px 25px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    font-size: 15px;
+}
+
+.wrapper h2{
+    padding: 5px;
+    font-size: 22px;
+    text-align: center;
     color: #052d53;
 }
 
@@ -104,6 +140,7 @@
     background-color: #53A2BE;
     color: white;
     font-size: 12px;
+    font-weight: 600;
 }
 
 .list-wrapper table .os{
@@ -114,6 +151,7 @@
 }
 
 .list-wrapper table td{
+    font-weight: 700;
     font-size: 12px;
     padding: 5px;
     padding-right: auto;
@@ -143,90 +181,15 @@
     background-color: #D8D2CB;
 }
 
-.table-wrapper{
-    padding: 2px;
-}
-
-.table-wrapper .text-wrap{
+.text-wrap{
     padding: 8px;
     text-align: center;
     color: #052d53;
 }
 
-.table-wrapper .text-wrap h2{
+.text-wrap h2{
     font-size: 22px;
     padding: 5px;
-}
-
-.table-wrapper table{
-   margin-left: auto;
-   margin-right: auto;
-   padding: 5px;
-}
-
-.table-wrapper table th{
-    padding: 2px;
-    background-color: #53A2BE;
-    color: white;
-    font-size: 12px;
-}
-
-.table-wrapper table .os{
-    padding: 12px;
-    background-color: #132E32;
-    color: white;
-    font-size: 15px;
-}
-
-.table-wrapper table td{
-    font-size: 12px;
-    padding: 5px;
-    padding-right: auto;
-    text-align: center;
-    border-radius: 8px;
-    border: 2px solid #176087;
-}
-
-.table-wrapper table .op{
-    font-size: 12px;
-    padding: 5px;
-    padding-right: auto;
-    text-align: center;
-    border-radius: 8px;
-    border: 2px solid #176087;
-    background-color: #132E32;
-    color: white;
-}
-
-.table-wrapper table .nop{
-    font-size: 12px;
-    padding: 5px;
-    padding-right: auto;
-    text-align: center;
-    border-radius: 8px;
-    border: 2px solid #0A2239;
-    background-color: #D8D2CB;
-}
-
-.table-wrapper .b-wrap{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2px;
-}
-
-.table-wrapper .b-wrap button{
-    background-color: #09b903;
-    padding: 5px 35px;
-    border: none;
-    border-radius: 8px;
-    border: 2px solid #09b903;
-    font-size: 15px;
-}
-
-.table-wrapper .b-wrap button a{
-    text-decoration: none;
-    color: white;
 }
 
 .total-list{
@@ -251,27 +214,6 @@
     border: 2px solid #176087;
     font-size: 16px;
     text-align: center;
-}
-
-.recom{
-    margin-left: 15%;
-    margin-right: 15%;
-    margin-top: 15px;
-    padding: 5px;
-    background-color: #132E32;
-    border-radius: 8px;
-}
-
-.recom h2{
-    padding: 5px;
-    color: yellow;
-    font-size: 18px;
-}
-
-.recom p{
-    padding: 5px;
-    color: white;
-    font: 11px;
 }
 
 .wrapper .button-wrapper{
@@ -299,6 +241,294 @@
 }
 
 /*--- DIALOG -- */
+
+.op-modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.op-modal .modal-wrapper{
+    background-color: #ffffff;
+    margin: 25%; /* 15% from the top and centered */
+    margin-left: 8%;
+    margin-right: 8%;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+}
+
+.op-modal .modal-wrapper i{
+    float: right;
+    font-size: 22px;
+    color: red;
+}
+
+.op-modal .modal-wrapper .t-wrap{
+    padding: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #0A2239;
+}
+
+.op-modal .modal-wrapper .table-wrapper{
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.op-modal .modal-wrapper .table-wrapper table{
+    padding: 5px;
+}
+
+.op-modal .modal-wrapper .table-wrapper table th{
+    padding: 2px;
+    background-color: #53A2BE;
+    color: white;
+    font-size: 12px;
+}
+
+.op-modal .modal-wrapper .table-wrapper table .os{
+    padding: 12px;
+    background-color: #132E32;
+    color: white;
+    font-size: 15px;
+}
+
+.op-modal .modal-wrapper .table-wrapper table td{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+}
+
+.op-modal .modal-wrapper .table-wrapper table .op{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    background-color: #132E32;
+    color: white;
+}
+
+.op-modal .modal-wrapper .table-wrapper table .nop{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    background-color: #D8D2CB;
+}
+
+.op-modal .modal-wrapper .b-wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+.op-modal .modal-wrapper .b-wrap button{
+    background-color: #09b903;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #09b903;
+    font-size: 15px;
+}
+
+.op-modal .modal-wrapper .b-wrap button a{
+    text-decoration: none;
+    color: white;
+}
+
+.op-modal .modal-wrapper .total-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #052d53;
+}
+
+.op-modal .modal-wrapper .total-list .text-wrap{
+    padding: 12px;
+}
+
+.op-modal .modal-wrapper .total-list .text-wrap h2{
+    padding: 2px;
+    font-size: 12px;
+}
+
+.op-modal .modal-wrapper .total-list .text-wrap p{
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    font-size: 12px;
+    text-align: center;
+    color: #052d53;
+}
+
+.op-modal .modal-wrapper .error-wrap{
+    padding: 8px;
+    text-align: center;
+    color: #ff0000;
+}
+
+.dis-modal{
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.dis-modal .modal-wrapper{
+    background-color: #ffffff;
+    margin: 25%; /* 15% from the top and centered */
+    margin-left: 8%;
+    margin-right: 8%;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #ffffff;
+}
+
+.dis-modal .modal-wrapper i{
+    float: right;
+    font-size: 22px;
+    color: red;
+}
+
+.dis-modal .modal-wrapper .t-wrap{
+    padding: 8px;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: #0A2239;
+}
+
+.dis-modal .modal-wrapper .table-wrapper{
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table{
+    padding: 5px;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table th{
+    padding: 2px;
+    background-color: #53A2BE;
+    color: white;
+    font-size: 12px;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table .os{
+    padding: 12px;
+    background-color: #132E32;
+    color: white;
+    font-size: 15px;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table td{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table .op{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    background-color: #132E32;
+    color: white;
+}
+
+.dis-modal .modal-wrapper .table-wrapper table .nop{
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px;
+    padding-right: auto;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid #0A2239;
+    background-color: #D8D2CB;
+}
+
+.dis-modal .modal-wrapper .b-wrap{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+}
+
+.dis-modal .modal-wrapper .b-wrap button{
+    background-color: #09b903;
+    padding: 5px 35px;
+    border: none;
+    border-radius: 8px;
+    border: 2px solid #09b903;
+    font-size: 15px;
+}
+
+.dis-modal .modal-wrapper .b-wrap button a{
+    text-decoration: none;
+    color: white;
+}
+
+.dis-modal .modal-wrapper .total-list{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #052d53;
+}
+
+.dis-modal .modal-wrapper .total-list .text-wrap{
+    padding: 12px;
+}
+
+.dis-modal .modal-wrapper .total-list .text-wrap h2{
+    padding: 2px;
+    font-size: 12px;
+}
+
+.dis-modal .modal-wrapper .total-list .text-wrap p{
+    padding: 5px;
+    border-radius: 8px;
+    border: 2px solid #176087;
+    font-size: 12px;
+    text-align: center;
+    color: #052d53;
+}
+
+.dis-modal .modal-wrapper .error-wrap{
+    padding: 8px;
+    text-align: center;
+    color: #ff0000;
+}
 
 .modal{
     display: none; /* Hidden by default */
@@ -427,7 +657,6 @@
     /* RESULTS */
     .back{
         float: left;
-        margin: 15px;
         font-size: 34px;
         color:#0A2239
     }
@@ -437,8 +666,8 @@
     }
 
     .wrapper{
-        margin-right: 15px;
-        margin-left: 15px;
+        margin-right: 10%;
+        margin-left: 10%;
         padding: 15px;   
     }
 
@@ -446,6 +675,44 @@
         padding: 5px;
         text-align: center;
         font-size: 25px;
+        color: #052d53;
+    }
+
+    .wrapper .title-text .dialog-buttons{
+        padding: 5px;
+    }
+    
+    .wrapper .title-text .dialog-buttons button{
+        background-color: #0A2239;
+        color: #fff;
+        padding: 5px 25px;
+        border: none;
+        border-radius: 8px;
+        border: 2px solid #0A2239;
+        font-size: 18px;
+    }
+
+    .wrapper .title-text .dialog-buttons .dcl{
+        border: 2px solid #0A2239;
+        background-color: #D8D2CB;
+        color: #0A2239;
+        padding: 5px 25px;
+        border: none;
+        border-radius: 8px;
+        border: 2px solid #0A2239;
+        font-size: 18px;
+    }
+
+    .wrapper .title-text .dialog-buttons button:hover{
+        background-color: white;
+        color: #0A2239;
+        border: 2px solid #0A2239;
+    }
+
+    .wrapper h2{
+        padding: 5px;
+        font-size: 28px;
+        text-align: center;
         color: #052d53;
     }
 
@@ -460,6 +727,7 @@
     }
     
     .list-wrapper table th{
+        font-weight: 600;
         padding: 5px;
         background-color: #53A2BE;
         color: white;
@@ -474,6 +742,7 @@
     }
     
     .list-wrapper table td{
+        font-weight: 600;
         font-size: 15px;
         padding: 5px;
         padding-right: auto;
@@ -483,6 +752,7 @@
     }
     
     .list-wrapper table .op{
+        font-weight: 600;
         font-size: 15px;
         padding: 5px;
         padding-right: auto;
@@ -494,71 +764,6 @@
     }
     
     .list-wrapper table .nop{
-        font-size: 15px;
-        padding: 5px;
-        padding-right: auto;
-        text-align: center;
-        border-radius: 8px;
-        border: 2px solid #0A2239;
-        background-color: #D8D2CB;
-    }
-
-    .table-wrapper{
-        padding: 2px;
-    }
-
-    .table-wrapper .text-wrap{
-        padding: 8px;
-        text-align: center;
-        color: #052d53;
-    }
-
-    .table-wrapper .text-wrap h2{
-        font-size: 28px;
-        padding: 2px;
-    }
-
-    .table-wrapper table{
-    margin-left: auto;
-    margin-right: auto;
-    padding: 5px;
-    }
-
-    .table-wrapper table th{
-        padding: 15px;
-        background-color: #53A2BE;
-        color: white;
-        font-size: 15px;
-    }
-
-    .table-wrapper table .os{
-        padding: 15px;
-        background-color: #132E32;
-        color: white;
-        font-size: 15px;
-    }
-
-    .table-wrapper table td{
-        font-size: 15px;
-        padding: 5px;
-        padding-right: auto;
-        text-align: center;
-        border-radius: 8px;
-        border: 2px solid #176087;
-    }
-
-    .table-wrapper table .op{
-        font-size: 15px;
-        padding: 5px;
-        padding-right: auto;
-        text-align: center;
-        border-radius: 8px;
-        border: 2px solid #176087;
-        background-color: #132E32;
-        color: white;
-    }
-
-    .table-wrapper table .nop{
         font-size: 15px;
         padding: 5px;
         padding-right: auto;
@@ -594,25 +799,6 @@
         text-align: center;
     }
 
-    .recom{
-        margin-left: 20%;
-        margin-right: 20%;
-        padding: 5px;
-        background-color: #132E32;
-        border-radius: 8px;
-    }
-
-    .recom h2{
-        padding: 5px;
-        color: yellow;
-    }
-
-    .recom p{
-        padding: 5px;
-        color: white;
-        font: 12px;
-    }
-
     .wrapper .button-wrapper{
         text-align: center;
         padding: 5px;
@@ -638,6 +824,266 @@
     }
 
     /*--- DIALOG -- */
+
+    .op-modal{
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    .op-modal .modal-wrapper{
+        background-color: #ffffff;
+        margin: 5%; /* 15% from the top and centered */
+        margin-left: 25%;
+        margin-right: 25%;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #ffffff;
+    }
+    
+    .op-modal .modal-wrapper i{
+        float: right;
+        font-size: 22px;
+        color: red;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper{
+        display: flex;
+        justify-content: center;
+        overflow-x: auto;
+        padding: 5px;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table{
+        padding: 5px;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table th{
+        font-weight: 600;
+        padding: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: #53A2BE;
+        color: white;
+        font-size: 15px;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table .os{
+        padding: 12px;
+        background-color: #132E32;
+        color: white;
+        font-size: 15px;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table td{
+        font-size: 15px;
+        font-weight: 600;
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #176087;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table .op{
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #176087;
+        background-color: #132E32;
+        color: white;
+    }
+    
+    .op-modal .modal-wrapper .table-wrapper table .nop{
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #0A2239;
+        background-color: #D8D2CB;
+    }
+    
+    .op-modal .modal-wrapper .b-wrap{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+    }
+    
+    .op-modal .modal-wrapper .b-wrap button{
+        background-color: #09b903;
+        padding: 5px 35px;
+        border: none;
+        border-radius: 8px;
+        border: 2px solid #09b903;
+        font-size: 15px;
+    }
+    
+    .op-modal .modal-wrapper .b-wrap button a{
+        text-decoration: none;
+        color: white;
+    }
+    
+    .op-modal .modal-wrapper .total-list{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #052d53;
+    }
+    
+    .op-modal .modal-wrapper .total-list .text-wrap{
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+    
+    .op-modal .modal-wrapper .total-list .text-wrap h2{
+        font-size: 15px;
+    }
+    
+    .op-modal .modal-wrapper .total-list .text-wrap p{
+        padding: 5px;
+        border-radius: 8px;
+        border: 2px solid #176087;
+        font-size: 15px;
+        text-align: center;
+        color: #052d53;
+    }
+    
+    .dis-modal{
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    }
+    
+    .dis-modal .modal-wrapper{
+        background-color: #ffffff;
+        margin: 5%; /* 15% from the top and centered */
+        margin-left: 25%;
+        margin-right: 25%;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #ffffff;
+    }
+    
+    .dis-modal .modal-wrapper i{
+        float: right;
+        font-size: 22px;
+        color: red;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper{
+        display: flex;
+        justify-content: center;
+        overflow-x: auto;
+        padding: 5px;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table{
+        padding: 5px;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table th{
+        font-weight: 600;
+        padding: 2px;
+        background-color: #53A2BE;
+        color: white;
+        font-size: 15px;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table .os{
+        padding: 12px;
+        background-color: #132E32;
+        color: white;
+        font-size: 15px;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table td{
+        font-size: 15px;
+        font-weight: 600;
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #176087;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table .op{
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #176087;
+        background-color: #132E32;
+        color: white;
+    }
+    
+    .dis-modal .modal-wrapper .table-wrapper table .nop{
+        padding: 5px;
+        padding-right: auto;
+        text-align: center;
+        border-radius: 8px;
+        border: 2px solid #0A2239;
+        background-color: #D8D2CB;
+    }
+    
+    .dis-modal .modal-wrapper .b-wrap{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2px;
+    }
+    
+    .dis-modal .modal-wrapper .b-wrap button{
+        background-color: #09b903;
+        padding: 5px 35px;
+        border: none;
+        border-radius: 8px;
+        border: 2px solid #09b903;
+        font-size: 15px;
+    }
+    
+    .dis-modal .modal-wrapper .b-wrap button a{
+        text-decoration: none;
+        color: white;
+    }
+    
+    .dis-modal .modal-wrapper .total-list{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #052d53;
+    }
+    
+    .dis-modal .modal-wrapper .total-list .text-wrap{
+        padding-left: 25px;
+        padding-right: 25px;
+    }
+    
+    .dis-modal .modal-wrapper .total-list .text-wrap h2{
+        font-size: 15px;
+    }
+    
+    .dis-modal .modal-wrapper .total-list .text-wrap p{
+        padding: 5px;
+        border-radius: 8px;
+        border: 2px solid #176087;
+        font-size: 15px;
+        text-align: center;
+        color: #052d53;
+    }
 
     .modal{
         display: none; /* Hidden by default */

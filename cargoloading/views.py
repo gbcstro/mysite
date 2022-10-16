@@ -63,7 +63,8 @@ def generate(request):
             weight = []
             cbm = []
             chargeable_weight = []
-            value = [] 
+            value = []
+
             i = 0
             rate = csvform.cleaned_data['ini_rate']
 
@@ -202,6 +203,8 @@ def table(request, pk):
     id = decrypt(pk)
     try: 
         cargo = Cargo.objects.get(id=id)
+        cl = cargoList.objects.filter(cargo=id)
+        cl.delete()
     except:
         return redirect(index)
 
@@ -304,15 +307,9 @@ def table(request, pk):
 
 #List of not included items
 xboxList = []
-xwghtList = []
-xcbmList = []
-xvalList = []
 
 #Final Optimal List
 boxList = []
-wghtList = []
-cbmList = []
-valList = []
 
 def result(request, pk):
     x = datetime.utcnow()
@@ -350,13 +347,13 @@ def result(request, pk):
     for l in cargolist:
         box.append(l.box)
         description.append(l.description)
-        height.append(round(float(l.height)))
-        length.append(round(float(l.length)))
-        width.append(round(float(l.width)))
-        weight.append(round(float(l.weight)))
-        cbm.append(round(float(l.cbm)))
-        chargeable_weight.append(round(float(l.chargeable_weight)))
-        value.append(round(float(l.profit)))
+        height.append(int(l.height))
+        length.append(int(l.length))
+        width.append(int(l.width))
+        weight.append(int(l.weight))
+        cbm.append(round(int(l.cbm)))
+        chargeable_weight.append(int(l.chargeable_weight))
+        value.append(int(l.profit))
 
 
     volume = 666 if int(capacity) == 600 else 999 if int(capacity) == 1000 else 3330
@@ -373,30 +370,56 @@ def result(request, pk):
     total_box = len(box)
     total_cbm = sum(cbm)
 
-    final_list = zip(boxList,wghtList,valList,cbmList)
+    #Final List
+    fb = []
+    fDesc = []
+    fWg = []
+    fVol = []
+    fP = []
+
+    for i in range(len(box)):
+        if box[i] in boxList:
+            fb.append(box[i])
+            fDesc.append(description[i])
+            fWg.append(weight[i])
+            fVol.append(cbm[i])
+            fP.append(value[i])
+
+
+    final_list = zip(fb,fDesc,fWg,fP,fVol)
     #Summary of final solution
-    final_cost = sum(valList)
-    final_weight = sum(wghtList)
-    final_box = len(boxList)
-    final_cbm = sum(cbmList)
+    final_cost = sum(fP)
+    final_weight = sum(fWg)
+    final_box = len(fb)
+    final_cbm = sum(fVol)
 
-    drop_list = zip(xboxList,xwghtList,xvalList,xcbmList)
+    #Discraded List
+    xb = []
+    xDesc = []
+    xWg = []
+    xH = []
+    xL = []
+    xW = []
+    xVol = []
+    xP = []
+
+    for i in range(len(box)):
+        if box[i] in xboxList:
+            xb.append(box[i])
+            xDesc.append(description[i])
+            xH.append(height[i])
+            xL.append(length[i])
+            xW.append(width[i])
+            xWg.append(weight[i])
+            xVol.append(cbm[i])
+            xP.append(value[i])
+
+    drop_list = zip(xb,xDesc,xWg,xH,xL,xW,xVol,xP)
     #Summary of drop list
-    drop_cost = sum(xvalList)
-    drop_weight = sum(xwghtList)
+    drop_cost = sum(xP)
+    drop_weight = sum(xWg)
     drop_box = len(xboxList)
-    drop_cbm = sum(xcbmList)
-
-    if drop_weight == 0 and drop_cbm == 0:
-        recommendation = "No recommendations needed."
-    elif (drop_weight <= 600 or drop_weight != 0) and (drop_cbm <= 666 or drop_cbm != 0):
-        recommendation = "The recommended vehicle to load the remaining box/es is a light van with a maximum capacity of 600 kg in terms of weight and a maximum capacity of 666 kg in terms of volume."
-    elif (drop_weight > 600 or drop_weight <= 1000) and (drop_cbm > 666 or drop_cbm <= 999):
-        recommendation = "The recommended vehicle to load the remaining box/es is an L300 van with a maximum capacity of 1000 kg in terms of weight and a maximum capacity of 999 kg in terms of volume."
-    elif (drop_weight > 1000 or drop_weight <= 2000) and (drop_cbm > 999 or drop_cbm <= 3330):
-        recommendation = "The recommended vehicle to load the remaining box/es is a closed van with a maximum capacity of 2000 kg in terms of weight and a maximum capacity of 3330 kg in terms of volume."
-    else:
-        recommendation = "It is better to use big trucks in loading the remaining items"
+    drop_cbm = sum(xVol)
     
     id = encrypt(id)
     
@@ -421,7 +444,6 @@ def result(request, pk):
         'drop_weight':drop_weight,
         'drop_box':drop_box,
         'drop_cbm':drop_cbm,
-        'recom':recommendation,
     }
 
     return render(request, 'result.html', context)
@@ -431,7 +453,8 @@ def op_csv(request, pk):
     cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = cargo.capacity
-
+    time = cargo.creation_time.strftime("%Y/%m/%d-%H-%M-%S")
+    print(time)
     cargolist = cargoList.objects.filter(cargo=id)
 
     #Initial List
@@ -466,15 +489,30 @@ def op_csv(request, pk):
 
     response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="optimal.csv"'},
+            headers={'Content-Disposition': 'attachment; filename="{}_optimal.csv."'.format(time)},
     )
 
+    #Final List
+    fb = []
+    fDesc = []
+    fWg = []
+    fVol = []
+    fP = []
+
+    for i in range(len(box)):
+        if box[i] in boxList:
+            fb.append(box[i])
+            fDesc.append(description[i])
+            fWg.append(weight[i])
+            fVol.append(cbm[i])
+            fP.append(value[i])
+
     write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    ly = zip(boxList, wghtList, cbmList, valList)
+    header = ['Box No.','Description','Weight','Volume','Profit']
+    ly = zip(fb,fDesc,fWg,fVol,fP)
     write.writerow(header)
-    for b, w, c, v in ly:
-        write.writerow((b,w,c,v))
+    for b, d, w, c, v in ly:
+        write.writerow((b,d,w,c,v))
 
     return response
 
@@ -483,6 +521,7 @@ def dp_csv(request,pk):
     cargo = Cargo.objects.get(id=id)
     boxes = int(cargo.num_box)
     capacity = cargo.capacity
+    time = cargo.creation_time.strftime("%Y/%m/%d-%H-%M-%S")
 
     cargolist = cargoList.objects.filter(cargo=id)
 
@@ -496,6 +535,14 @@ def dp_csv(request,pk):
     cbm = []
     chargeable_weight = []
     value = []
+
+    #Discraded List
+    xb = []
+    xDesc = []
+    xH = []
+    xL = []
+    xW = []
+    xWg = []
 
     for l in cargolist:
         box.append(l.box)
@@ -518,15 +565,24 @@ def dp_csv(request,pk):
 
     response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="drop.csv"'},
+            headers={'Content-Disposition': 'attachment; filename="{}_drop.csv"'.format(time)},
     )
 
+    for i in range(len(box)):
+        if box[i] in xboxList:
+            xb.append(box[i])
+            xDesc.append(description[i])
+            xH.append(height[i])
+            xL.append(length[i])
+            xW.append(width[i])
+            xWg.append(weight[i])
+
     write = csv.writer(response)
-    header = ['Box No.','Weight','Volume','Profit']
-    lz = zip(xboxList, xwghtList, xcbmList, xvalList)
+    header = ['Description','Height','Length','Width','Weight']
+    lz = zip(xDesc, xH, xL, xW, xWg)
     write.writerow(header)
-    for b, w, c, v in lz:
-        write.writerow((b,w,c,v))
+    for d, h, l, w, wg in lz:
+        write.writerow((d,h,l,w,wg))
 
     return response
 
@@ -626,15 +682,11 @@ def dynamic_Prog_Weight(W, V, M, n, C, Z):
     print(Final_optimal_set)
 
     boxList.clear()
-    wghtList.clear()
-    cbmList.clear()
-    valList.clear()
+    
 
     for i in Final_optimal_set:
         boxList.append(i[0])
-        wghtList.append(i[1])
-        valList.append(i[2])
-        cbmList.append(i[3])
+        
 
     finalcbmSum = sum(Final_optimal_set[:, -1])
 
@@ -643,15 +695,10 @@ def dynamic_Prog_Weight(W, V, M, n, C, Z):
     not_included = np.delete(not_included, -1, axis=0)
 
     xboxList.clear()
-    xwghtList.clear()
-    xcbmList.clear()
-    xvalList.clear()
 
     for i in not_included:
         xboxList.append(i[0])
-        xwghtList.append(i[1])
-        xvalList.append(i[2])
-        xcbmList.append(i[3])
+        
 
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
@@ -753,15 +800,11 @@ def dynamic_Prog_Volume(W, V, M, n, C, Z):
     print(Final_optimal_set)
 
     boxList.clear()
-    wghtList.clear()
-    cbmList.clear()
-    valList.clear()
+    
 
     for i in Final_optimal_set:
         boxList.append(i[0])
-        wghtList.append(i[1])
-        valList.append(i[2])
-        cbmList.append(i[3])
+        
 
     finalcbmSum = sum(Final_optimal_set[:, -1])
 
@@ -774,15 +817,11 @@ def dynamic_Prog_Volume(W, V, M, n, C, Z):
     print(not_included)
 
     xboxList.clear()
-    xwghtList.clear()
-    xcbmList.clear()
-    xvalList.clear()
+    
 
     for i in not_included:
         xboxList.append(i[0])
-        xwghtList.append(i[1])
-        xvalList.append(i[2])
-        xcbmList.append(i[3])
+        
 
     not_includedcbmSum = sum(not_included[:, -1])
     notincluded_numBox = int(len(not_included[:, 0]))
