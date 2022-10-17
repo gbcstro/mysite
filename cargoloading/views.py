@@ -489,7 +489,7 @@ def op_csv(request, pk):
 
     response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="{}_optimal.csv."'.format(time)},
+            headers={'Content-Disposition': 'attachment; filename="Optimal List_{}.csv"'.format(time)},
     )
 
     #Final List
@@ -565,7 +565,7 @@ def dp_csv(request,pk):
 
     response = HttpResponse(
             content_type='text/csv',
-            headers={'Content-Disposition': 'attachment; filename="{}_drop.csv"'.format(time)},
+            headers={'Content-Disposition': 'attachment; filename="Discarded List_{}.csv"'.format(time)},
     )
 
     for i in range(len(box)):
