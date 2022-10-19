@@ -680,9 +680,26 @@
 
     .wrapper .title-text .dialog-buttons{
         padding: 5px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .wrapper .title-text .dialog-buttons .dialog{
+        padding: 20px;
+        margin-left: 5%;
+        margin-right: 5%;
+    }
+
+    .wrapper .title-text .dialog-buttons .dialog h2{
+        font-size: 28px;
+    }
+
+    .wrapper .title-text .dialog-buttons .dialog p{
+        text-align: justify;
+        font-size: 22px;
     }
     
-    .wrapper .title-text .dialog-buttons button{
+    .wrapper .title-text .dialog-buttons .dialog button{
         background-color: #0A2239;
         color: #fff;
         padding: 5px 25px;
@@ -692,7 +709,7 @@
         font-size: 18px;
     }
 
-    .wrapper .title-text .dialog-buttons .dcl{
+    .wrapper .title-text .dialog-buttons .dialog .dcl{
         border: 2px solid #0A2239;
         background-color: #D8D2CB;
         color: #0A2239;

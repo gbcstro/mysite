@@ -15,8 +15,16 @@
     <div class="title-text">
         <h1>SUMMARY</h1>
         <div class="dialog-buttons">
-            <button id="oplist">Optimal List</button>
-            <button id="dislist" class="dcl">Discarded List</button>
+            <div class="dialog">
+                <h2>OPTIMAL LIST</h2>
+                <p>View <button id="oplist">Optimal List</button> to see the optimal list of boxes that should be loaded in a vehicle.</p>
+            </div>
+            
+            <div class="dialog">
+                <h2>DISCARDED LIST</h2>
+                <p>View <button id="dislist" class="dcl">Discarded List</button> to see the set of boxes excluded from the optimal list.</p>
+            </div>
+            
         </div>
     </div>
     <h2>LIST OF ITEMS</h2>
@@ -134,7 +142,7 @@
                 </div>
             {% else %}
                 <div class="error-wrap">
-                    <h1>DISCARD LIST IS EMPTY</h1>
+                    <h1>OPTIMAL LIST IS EMPTY</h1>
                 </div>
             {% endif %}
             

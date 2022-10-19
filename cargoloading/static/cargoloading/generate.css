@@ -402,17 +402,18 @@ input::-webkit-inner-spin-button {
 }
 
 .table-wrapper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin-left: 5%;
+    margin-right: 5%;
     padding: 10px;
+    
 }
 
-.table-wrapper table {
+.table-wrapper .table {
+    overflow-x: auto;
     padding: 5px;
 }
 
-.table-wrapper table th{
+.table-wrapper .table th{
     padding: 5px;
     background-color: #53A2BE;
     color: white;
@@ -420,8 +421,9 @@ input::-webkit-inner-spin-button {
     font-weight: 600;
 }
 
-.table-wrapper table .num{
+.table-wrapper .table .num{
     font-size: 12px;
+    font-weight: 600;
     padding: 5px;
     padding-right: auto;
     text-align: center;
@@ -429,7 +431,7 @@ input::-webkit-inner-spin-button {
     border: 2px solid #69a6c7;
 }
 
-.table-wrapper table td input {
+.table-wrapper .table td input {
     width: 74px;
     font-size: 12px;
     font-weight: 600;
@@ -438,11 +440,11 @@ input::-webkit-inner-spin-button {
     border: 2px solid #69a6c7;
 }
 
-.table-wrapper table .req input {
+.table-wrapper .table .req input {
     width: 50px;
 }
 
-.table-wrapper table .req input::placeholder {
+.table-wrapper .table .req input::placeholder {
     font-weight: 900;
     color: red;
 }
@@ -869,11 +871,11 @@ input::-webkit-inner-spin-button {
         padding: 5px;
     }
 
-    .table-wrapper table {
+    .table-wrapper .table {
         padding: 15px;
     }
 
-    .table-wrapper table th{
+    .table-wrapper .table th{
         padding: 15px;
         background-color: #53A2BE;
         color: white;
@@ -881,7 +883,7 @@ input::-webkit-inner-spin-button {
         font-weight: 600;
     }
 
-    .table-wrapper table .num{
+    .table-wrapper .table .num{
         font-size: 15px;
         font-weight: 600;
         padding: 5px;
@@ -891,7 +893,7 @@ input::-webkit-inner-spin-button {
         border: 2px solid #69a6c7;
     }
 
-    .table-wrapper table td input {
+    .table-wrapper .table td input {
         width: auto;
         font-size: 15px;
         font-weight: 600;
@@ -900,11 +902,11 @@ input::-webkit-inner-spin-button {
         border: 2px solid #69a6c7;
     }
     
-    .table-wrapper table .req input {
+    .table-wrapper .table .req input {
         width: auto;
     }
 
-    .table-wrapper table .req input::placeholder {
+    .table-wrapper .table .req input::placeholder {
         font-weight: 900;
         color: red;
     }

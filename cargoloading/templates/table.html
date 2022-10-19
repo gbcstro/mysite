@@ -42,7 +42,8 @@
       <p>Boxes with * symbol are required fields.</p>
     </div>
     {% csrf_token %}
-    <table>
+    <div class="table">
+      <table>
       <thead>
         <th>Box No.</th>
         <th>Description</th>
@@ -65,6 +66,7 @@
         {% endfor %}
       </tbody>
     </table>
+    </div>
 
     <div class="error-message">
       {% if formset.errors %}
